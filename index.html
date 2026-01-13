@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linh Quẻ Gỗ 2026 🎋</title>
+    <style>
+        :root {
+            --wood-light: #f3d5b5;
+            --wood-dark: #8b5e34;
+            --deep-red: #a4161a;
+            --paper: #fff5e6;
+            --neon-gold: #ffcc00;
+        }
+
+        body { 
+            margin: 0; background: #2b1d10; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex; justify-content: center; align-items: center; min-height: 100vh;
+            color: white; overflow: hidden;
+        }
+
+        .container { width: 92%; max-width: 400px; text-align: center; }
+
+        .wood-panel {
+            background: var(--paper); color: #333; padding: 30px 20px;
+            border-radius: 20px; border: 8px double var(--wood-dark);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            position: relative;
+        }
+
+        h1 { color: var(--deep-red); margin: 0 0 5px 0; font-size: 24px; text-transform: uppercase; }
+
+        /* PHẦN HƯỚNG DẪN NHẬP NGÀY SINH */
+        .instruction-text {
+            color: var(--deep-red); font-weight: bold; font-size: 15px;
+            margin-top: 20px; animation: pulse 1s infinite;
+        }
+        
+        .arrow-down {
+            font-size: 25px; color: var(--deep-red);
+            margin-bottom: 5px; animation: bounce 1s infinite;
+        }
+
+        input[type="date"] { 
+            width: 100%; padding: 15px; border-radius: 12px; 
+            border: 3px solid var(--wood-dark); background: #fff;
+            font-size: 20px; margin-bottom: 20px; box-sizing: border-box; 
+            text-align: center; font-weight: bold; color: #333;
+            cursor: pointer; box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* Ống quẻ & Que kem */
+        #ong-que { font-size: 100px; margin: 20px 0; }
+        .shaking { animation: shake 0.1s infinite; }
+        
+        .spread-container { display: none; position: relative; height: 300px; margin-top: 10px; }
+        
+        .que-the {
+            width: 45px; height: 220px; 
+            background: linear-gradient(to bottom, var(--wood-light), #e7bc91);
+            border-radius: 25px 25px 5px 5px; border: 1px solid #bc8a5f;
+            position: absolute; left: 50%; bottom: 20px; margin-left: -22.5px;
+            transform-origin: bottom center; transition: 0.5s ease;
+            display: flex; align-items: center; justify-content: center;
+            writing-mode: vertical-rl; font-weight: bold; color: var(--wood-dark);
+            font-size: 14px; box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .que-the.selected {
+            transform: translateY(-130px) scale(1.2) rotate(0deg) !important;
+            z-index: 100; background: #f4a261; border: 2px solid var(--deep-red);
+            color: var(--deep-red); box-shadow: 0 0 30px rgba(255,165,0,0.5);
+        }
+
+        /* Modal */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 999; justify-content: center; align-items: center; }
+        .modal-content { 
+            background: var(--paper); color: #222; width: 85%; padding: 30px 20px; 
+            border-radius: 15px; border: 10px double var(--wood-dark); text-align: center;
+        }
+        .res-title { font-size: 35px; font-weight: 900; color: var(--deep-red); }
+        .gift-tag { background: #fff3e0; color: #d35400; padding: 15px; border-radius: 10px; border: 2px dashed #d35400; font-weight: bold; margin-top: 10px; }
+
+        .btn { 
+            background: var(--deep-red); color: white; border: none; padding: 18px; 
+            border-radius: 50px; font-weight: bold; width: 100%; cursor: pointer; font-size: 18px;
+        }
+
+        /* Animations */
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        @keyframes shake { 0% { transform: rotate(5deg); } 50% { transform: rotate(-5deg); } 100% { transform: rotate(5deg); } }
+    </style>
+</head>
+<body>
+
+    <audio id="snd-shake" src="https://www.soundjay.com/misc/sounds/shaking-ice-in-cup-1.mp3"></audio>
+    <audio id="snd-win" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
+
+    <div class="container" id="mainApp">
+        <div class="wood-panel" id="input-box">
+            <h1>🎋 TIÊN TRI 2026 🎋</h1>
+            
+            <div class="instruction-text">👇 CHẠM VÀO ĐÂY NHẬP NGÀY SINH 👇</div>
+            <div class="arrow-down">▼</div>
+            
+            <input type="date" id="dob">
+            
+            <button class="btn" onclick="startGieo()">GIEO QUẺ XEM TƯƠNG LAI</button>
+            <p style="font-size: 12px; color: #666; margin-top: 10px;">(Dành riêng cho Gen Z hệ tâm linh)</p>
+        </div>
+        <div id="ong-que" style="display:none;">🏺</div>
+        <div class="spread-container" id="spread-box"></div>
+    </div>
+
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <div id="resTitle" class="res-title">...</div>
+            <div id="resDesc" class="res-desc" style="font-size: 19px; font-weight: bold; margin: 20px 0;">...</div>
+            <div id="giftSection" style="display:none;">
+                <div class="gift-tag">🎁 CHÚC MỪNG: NHẬN 01 MÓC KHÓA!</div>
+                <p style="color: #d32f2f; font-weight: bold; font-size: 14px; margin-top: 10px;">Hãy đưa màn hình này cho nhân viên để nhận quà nhé!</p>
+            </div>
+            <p style="font-size: 11px; color: #999; margin-top: 20px;">Quẻ đã định - Không thể gieo lại lần hai</p>
+        </div>
+    </div>
+
+<script>
+    const dataFortune = [
+        {t: "GIÀU NGANG NGƯỢC", d: "Năm 2026 lúa về đầy kho, quý nhân gánh team cực mạnh. Bạn chuẩn bị tinh thần flex túi tiền không đáy nhé!", gift: false},
+        {t: "GREEN FLAG", d: "Tình duyên năm tới nở rộ. Một nửa 'over hợp' sắp xuất hiện, chốt đơn thôi ní ơi!", gift: false},
+        {t: "VẬN MAY KIẾN TẠO", d: "Đỉnh của chóp! Bạn sắp có bước ngoặt lớn khiến ai cũng phải trầm trồ. Thời tới cản không kịp!", gift: true},
+        {t: "CỨU CÁI CỘT SỐNG", d: "Năm tới bận rộn tới công chuyện luôn, nhưng thành quả cực xứng đáng. Lương thưởng sẽ cứu vãn cột sống của bạn!", gift: false},
+        {t: "VÍ KHÔNG ĐÁY", d: "Tiền bạc rơi trúng đầu, chi tiêu không cần nhìn giá. Vận tài lộc của bạn đang ở mức 100%!", gift: false},
+        {t: "THOÁT KIẾP NẠN", d: "Mọi khó khăn năm cũ sẽ tan biến. Năm 2026 là năm để bạn tỏa sáng rực rỡ.", gift: false},
+        {t: "SỐ HƯỞNG VÔ THỰC", d: "Vận may năm tới cực cháy! Làm gì cũng thành công, đi đâu cũng có người bao ăn bao chơi.", gift: true},
+        {t: "BẬC THẦY FLEX", d: "Năm tới danh tiếng vang xa, học hành thi cử đỗ đạt cao. Cả năm chỉ có việc ngồi nhận lời chúc thôi!", gift: false},
+        {t: "TÌNH YÊU TRÊN MÂY", d: "Người yêu cũ sẽ không còn là nỗi lo. Một mối quan hệ mới cực kỳ 'healing' đang tiến về phía bạn.", gift: false},
+        {t: "VI VU KHẮP CHỐN", d: "Chuẩn bị hộ chiếu đi là vừa! Năm tới bạn sẽ có những chuyến đi xa cực xịn xò và sang chảnh.", gift: false}
+    ];
+
+    window.onload = function() {
+        const saved = localStorage.getItem('que_go_2026_v2');
+        if (saved) showFinal(JSON.parse(saved));
+    };
+
+    function startGieo() {
+        if(!document.getElementById('dob').value) {
+            alert("Ní ơi, phải chọn ngày sinh mới xem được quẻ chứ!");
+            return;
+        }
+        document.getElementById('input-box').style.display = 'none';
+        const ong = document.getElementById('ong-que');
+        ong.style.display = 'block';
+        document.getElementById('snd-shake').play();
+        ong.classList.add('shaking');
+        setTimeout(() => {
+            ong.classList.remove('shaking');
+            ong.style.display = 'none';
+            renderSticks();
+        }, 2500);
+    }
+
+    function renderSticks() {
+        const box = document.getElementById('spread-box');
+        box.style.display = 'block';
+        for(let i=0; i<8; i++) {
+            const stick = document.createElement('div');
+            stick.className = 'que-the';
+            stick.innerHTML = "QUẺ 2026";
+            stick.onclick = function() { pick(this); };
+            box.appendChild(stick);
+            setTimeout(() => { 
+                stick.style.transform = `rotate(${(i-3.5)*12}deg) translateX(${(i-3.5)*10}px)`; 
+            }, i*100);
+        }
+    }
+
+    function pick(el) {
+        el.classList.add('selected');
+        setTimeout(() => {
+            const dob = document.getElementById('dob').value.replace(/-/g, "");
+            let sum = 0; for(let n of dob) sum += parseInt(n);
+            const res = dataFortune[sum % dataFortune.length];
+            localStorage.setItem('que_go_2026_v2', JSON.stringify(res));
+            showFinal(res);
+        }, 800);
+    }
+
+    function showFinal(res) {
+        document.getElementById('snd-win').play();
+        document.getElementById('resTitle').innerText = res.t;
+        document.getElementById('resDesc').innerText = res.d;
+        if(res.gift) document.getElementById('giftSection').style.display = 'block';
+        document.getElementById('resultModal').style.display = 'flex';
+        document.getElementById('mainApp').style.display = 'none';
+    }
+</script>
+</body>
+</html>
