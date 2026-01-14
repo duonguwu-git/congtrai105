@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bói Quẻ 10/5 - SIÊU ÂM THANH</title>
+    <title>Bói Quẻ 10/5 - FIX ÂM THANH</title>
     <style>
-        /* --- GIỮ NGUYÊN CSS GỐC XỊN XÒ --- */
+        /* --- GIỮ NGUYÊN CSS XỊN XÒ --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -38,12 +38,12 @@
         .mantra { position: absolute; color: #c0392b; font-weight: bold; opacity: 0; white-space: nowrap; font-style: italic; }
         .shaking .mantra { animation: fly 1s infinite linear; opacity: 1; }
         @keyframes fly { 0% { transform: translateY(0) scale(0.5); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(-100px) scale(1.2); opacity: 0; } }
-        .shaking { animation: shake 0.15s infinite; }
-        @keyframes shake { 0%, 100% {transform: rotate(0);} 25% {transform: rotate(-8deg);} 75% {transform: rotate(8deg);} }
+        .shaking { animation: shake 0.1s infinite; }
+        @keyframes shake { 0%, 100% {transform: rotate(0);} 25% {transform: rotate(-10deg);} 75% {transform: rotate(10deg);} }
 
         .sticks-container { display: flex; justify-content: center; align-items: flex-end; height: 150px; margin: 20px 0; }
         .stick { width: 20px; height: 120px; background: #8b4513; margin: 0 5px; border-radius: 5px 5px 0 0; cursor: pointer; transition: 0.3s; }
-        .stick.selected { transform: translateY(-50px) rotate(5deg); background: #ffd700; border: 2px solid #c0392b; }
+        .stick.selected { transform: translateY(-60px) rotate(5deg); background: #ffd700; border: 2px solid #c0392b; }
         .stick.disabled { opacity: 0.2; pointer-events: none; }
 
         #result-modal {
@@ -51,9 +51,8 @@
             background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 15px;
         }
         #checkin-board { background: #fff; border: 4px solid #c0392b; padding: 25px; border-radius: 15px; width: 100%; max-width: 380px; position: relative; }
-        #special-timer { display: none; background: #ff4757; color: white; padding: 10px; border-radius: 8px; margin: 10px 0; font-weight: bold; border: 2px dashed #ffd700; animation: pulse 1s infinite; }
-        @keyframes pulse { 0% {transform: scale(1);} 50% {transform: scale(1.05);} 100% {transform: scale(1);} }
-        .ad-banner { background: #c0392b; color: white; padding: 10px; border-radius: 8px; margin-top: 15px; font-weight: bold; font-size: 14px; line-height: 1.4; }
+        #special-timer { display: none; background: #ff4757; color: white; padding: 10px; border-radius: 8px; margin: 10px 0; font-weight: bold; border: 2px dashed #ffd700; }
+        .ad-banner { background: #c0392b; color: white; padding: 10px; border-radius: 8px; margin-top: 15px; font-weight: bold; font-size: 14px; }
         #confetti-canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 2500; }
     </style>
 </head>
@@ -82,7 +81,7 @@
                 <div class="mantra" style="right: -30px;">Bát di hồng...</div>
                 <div id="jar"></div>
             </div>
-            <p>Vũ trụ đang lạch cạch kết nối...</p>
+            <p>Đang xóc quẻ lạch cạch...</p>
         </div>
 
         <div id="screen-sticks" class="screen">
@@ -95,18 +94,12 @@
                 <div id="checkin-board">
                     <h2 style="font-size: 18px;">📜 LÁ SỐ MAY MẮN 📜</h2>
                     <div id="result-display" style="padding: 10px 0; font-size: 16px;"></div>
-                    
                     <div id="special-timer">
                         ⏳ 15 PHÚT VÀNG: <span id="timer-clock">15:00</span><br>
                         <small>Chụp màn hình đưa quầy 10/5 ngay!</small>
                     </div>
-
-                    <div id="gift-display" style="font-weight: bold; color: #c0392b; margin: 10px 0; border-top: 2px dashed #eee; padding-top: 10px; min-height: 40px;"></div>
-
-                    <div class="ad-banner">
-                        🚩 TRẠI LỚP 10/5<br>
-                        Nước ngon, giải hạn, quẻ cực chuẩn!
-                    </div>
+                    <div id="gift-display" style="font-weight: bold; color: #c0392b; margin: 10px 0; border-top: 2px dashed #eee; padding-top: 10px;"></div>
+                    <div class="ad-banner">🚩 TRẠI LỚP 10/5<br>Nước ngon, giải hạn, quẻ cực chuẩn!</div>
                 </div>
                 <button id="btn-mystery" style="background: #ff4757; color: white;">🎁 NHẬN LỘC TỪ VŨ TRỤ</button>
                 <button id="share-button" style="background: #0084ff; color: white;">📢 CHIA SẺ CHECK-IN</button>
@@ -117,16 +110,31 @@
     <canvas id="confetti-canvas"></canvas>
 
     <script>
+        // --- KHỞI TẠO ÂM THANH ---
         const audios = {
             click: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
-            shake: new Audio('https://assets.mixkit.co/active_storage/sfx/1074/1074-preview.mp3'), // Tiếng lạch cạch (Xóc quẻ)
-            swipe: new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3'), // Tiếng xoẹt (Rút quẻ)
-            reveal: new Audio('https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3'), // Tiếng hiện quẻ
-            gift: new Audio('https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3')    // Tiếng nhận quà
+            shake: new Audio('https://assets.mixkit.co/active_storage/sfx/1074/1074-preview.mp3'), // Tiếng gỗ lạch cạch
+            swipe: new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3'), // Tiếng xoẹt
+            reveal: new Audio('https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3'), 
+            gift: new Audio('https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3')   
         };
-        audios.shake.loop = true;
 
-        const storageKey = 'user_fortune_10_5_ultra_sound_final';
+        // Buộc trình duyệt tải trước âm thanh
+        Object.values(audios).forEach(audio => {
+            audio.load();
+            if (audio === audios.shake) audio.loop = true;
+        });
+
+        const storageKey = 'user_fortune_10_5_final_vAudio';
+
+        // --- HÀM HỖ TRỢ PHÁT ÂM THANH (FIX LỖI TRÌNH DUYỆT) ---
+        function playSfx(name) {
+            const sfx = audios[name];
+            if (sfx) {
+                sfx.currentTime = 0;
+                sfx.play().catch(e => console.log("Chưa tương tác trang:", e));
+            }
+        }
 
         function getMysteryGift() {
             const rand = Math.random() * 100;
@@ -152,14 +160,26 @@
             }, 500);
         }
 
-        document.getElementById('confirm1').onclick = () => { audios.click.play(); showScreen('screen2'); };
-        document.getElementById('confirm2').onclick = () => { audios.click.play(); showScreen('screen-birthdate'); };
+        // KHI BẤM NÚT NÀY, ÂM THANH SẼ ĐƯỢC PHÉP CHẠY
+        document.getElementById('confirm1').onclick = () => { 
+            playSfx('click'); 
+            showScreen('screen2'); 
+        };
+
+        document.getElementById('confirm2').onclick = () => { 
+            playSfx('click'); 
+            showScreen('screen-birthdate'); 
+        };
 
         document.getElementById('cast').onclick = () => {
             if(!document.getElementById('birthdate').value) return alert("Nhập ngày sinh đã bạn ơi!");
-            audios.click.play(); showScreen('screen-jar');
+            playSfx('click'); 
+            showScreen('screen-jar');
             document.getElementById('jar-wrapper').classList.add('shaking');
-            audios.shake.play(); // CHẠY TIẾNG LẠCH CẠCH
+            
+            // CHẠY TIẾNG LẠCH CẠCH NGAY LẬP TỨC
+            audios.shake.play(); 
+
             setTimeout(() => {
                 audios.shake.pause();
                 showScreen('screen-sticks');
@@ -173,7 +193,7 @@
             for(let i=0; i<5; i++) {
                 const s = document.createElement('div'); s.className = 'stick';
                 s.onclick = () => {
-                    audios.swipe.play(); // TIẾNG XOẸT ĐỊNH MỆNH
+                    playSfx('swipe'); // TIẾNG XOẸT KHI RÚT THẺ
                     s.classList.add('selected');
                     document.querySelectorAll('.stick').forEach(el => el.classList.add('disabled'));
                     const data = {
@@ -192,7 +212,7 @@
             document.getElementById('result-display').innerHTML = `<p>${data.fortune}</p><p style="font-weight:bold; color:#c0392b; margin-top:5px;">Số may mắn: ${data.lucky}</p>`;
             document.getElementById('result-modal').style.display = 'flex';
             
-            if(!isOld) audios.reveal.play(); // TIẾNG HIỆN QUẺ
+            if(!isOld) playSfx('reveal');
 
             const btnMystery = document.getElementById('btn-mystery');
             if (isOld) {
@@ -201,7 +221,7 @@
             } else {
                 btnMystery.onclick = () => {
                     btnMystery.style.display = 'none';
-                    audios.gift.play(); // TIẾNG NHẬN QUÀ BÙNG NỔ
+                    playSfx('gift'); // TIẾNG NHẬN QUÀ
                     displayGift(data.gift);
                     confetti();
                 };
@@ -240,7 +260,7 @@
             update();
         }
 
-        document.getElementById('share-button').onclick = () => alert("Chụp màn hình lại để nhận quà tại 10/5 nhé!");
+        document.getElementById('share-button').onclick = () => alert("Chụp màn hình lại nhé!");
     </script>
 </body>
 </html>
