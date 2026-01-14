@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bói Quẻ 10/5 - PHIÊN BẢN GIỚI HẠN</title>
+    <title>Bói Quẻ 10/5 - SIÊU ÂM THANH</title>
     <style>
-        /* --- GIỮ NGUYÊN CSS GỐC --- */
+        /* --- GIỮ NGUYÊN CSS GỐC XỊN XÒ --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -38,12 +38,12 @@
         .mantra { position: absolute; color: #c0392b; font-weight: bold; opacity: 0; white-space: nowrap; font-style: italic; }
         .shaking .mantra { animation: fly 1s infinite linear; opacity: 1; }
         @keyframes fly { 0% { transform: translateY(0) scale(0.5); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(-100px) scale(1.2); opacity: 0; } }
-        .shaking { animation: shake 0.1s infinite; }
-        @keyframes shake { 0%, 100% {transform: rotate(0);} 25% {transform: rotate(-5deg);} 75% {transform: rotate(5deg);} }
+        .shaking { animation: shake 0.15s infinite; }
+        @keyframes shake { 0%, 100% {transform: rotate(0);} 25% {transform: rotate(-8deg);} 75% {transform: rotate(8deg);} }
 
         .sticks-container { display: flex; justify-content: center; align-items: flex-end; height: 150px; margin: 20px 0; }
         .stick { width: 20px; height: 120px; background: #8b4513; margin: 0 5px; border-radius: 5px 5px 0 0; cursor: pointer; transition: 0.3s; }
-        .stick.selected { transform: translateY(-50px); background: #ffd700; border: 2px solid #c0392b; }
+        .stick.selected { transform: translateY(-50px) rotate(5deg); background: #ffd700; border: 2px solid #c0392b; }
         .stick.disabled { opacity: 0.2; pointer-events: none; }
 
         #result-modal {
@@ -82,11 +82,11 @@
                 <div class="mantra" style="right: -30px;">Bát di hồng...</div>
                 <div id="jar"></div>
             </div>
-            <p>Vũ trụ đang lắng nghe...</p>
+            <p>Vũ trụ đang lạch cạch kết nối...</p>
         </div>
 
         <div id="screen-sticks" class="screen">
-            <p>Hãy rút một lá quẻ định mệnh:</p>
+            <p>Rút 1 quẻ - Nghe tiếng "Xoẹt" định mệnh:</p>
             <div class="sticks-container"></div>
         </div>
 
@@ -105,7 +105,7 @@
 
                     <div class="ad-banner">
                         🚩 TRẠI LỚP 10/5<br>
-                        Nước ngon, giải hạn, quẻ chuẩn!
+                        Nước ngon, giải hạn, quẻ cực chuẩn!
                     </div>
                 </div>
                 <button id="btn-mystery" style="background: #ff4757; color: white;">🎁 NHẬN LỘC TỪ VŨ TRỤ</button>
@@ -119,14 +119,14 @@
     <script>
         const audios = {
             click: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
-            shake: new Audio('https://orangefreesounds.com/wp-content/uploads/2015/07/Dice-shake-sound-effect.mp3'),
-            flip: new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3'),
-            fortune_reveal: new Audio('https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3'), // Tiếng hiện quẻ
-            win_reward: new Audio('https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3')   // Tiếng nhận quà (vỗ tay/pháo hoa)
+            shake: new Audio('https://assets.mixkit.co/active_storage/sfx/1074/1074-preview.mp3'), // Tiếng lạch cạch (Xóc quẻ)
+            swipe: new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3'), // Tiếng xoẹt (Rút quẻ)
+            reveal: new Audio('https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3'), // Tiếng hiện quẻ
+            gift: new Audio('https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3')    // Tiếng nhận quà
         };
         audios.shake.loop = true;
 
-        const storageKey = 'user_fortune_10_5_ultra_final_v5';
+        const storageKey = 'user_fortune_10_5_ultra_sound_final';
 
         function getMysteryGift() {
             const rand = Math.random() * 100;
@@ -159,7 +159,7 @@
             if(!document.getElementById('birthdate').value) return alert("Nhập ngày sinh đã bạn ơi!");
             audios.click.play(); showScreen('screen-jar');
             document.getElementById('jar-wrapper').classList.add('shaking');
-            audios.shake.play();
+            audios.shake.play(); // CHẠY TIẾNG LẠCH CẠCH
             setTimeout(() => {
                 audios.shake.pause();
                 showScreen('screen-sticks');
@@ -173,10 +173,11 @@
             for(let i=0; i<5; i++) {
                 const s = document.createElement('div'); s.className = 'stick';
                 s.onclick = () => {
-                    audios.flip.play(); s.classList.add('selected');
+                    audios.swipe.play(); // TIẾNG XOẸT ĐỊNH MỆNH
+                    s.classList.add('selected');
                     document.querySelectorAll('.stick').forEach(el => el.classList.add('disabled'));
                     const data = {
-                        fortune: "Vận mệnh năm 2026 của bạn đang thăng hoa rực rỡ!",
+                        fortune: "Vận mệnh năm 2026 của bạn đang rực rỡ như ánh bình minh!",
                         lucky: Math.floor(Math.random()*99)+1,
                         gift: getMysteryGift()
                     };
@@ -191,8 +192,7 @@
             document.getElementById('result-display').innerHTML = `<p>${data.fortune}</p><p style="font-weight:bold; color:#c0392b; margin-top:5px;">Số may mắn: ${data.lucky}</p>`;
             document.getElementById('result-modal').style.display = 'flex';
             
-            // Âm thanh hiện quẻ bói
-            if(!isOld) audios.fortune_reveal.play();
+            if(!isOld) audios.reveal.play(); // TIẾNG HIỆN QUẺ
 
             const btnMystery = document.getElementById('btn-mystery');
             if (isOld) {
@@ -201,8 +201,7 @@
             } else {
                 btnMystery.onclick = () => {
                     btnMystery.style.display = 'none';
-                    // Âm thanh nhận thưởng khác hẳn
-                    audios.win_reward.play(); 
+                    audios.gift.play(); // TIẾNG NHẬN QUÀ BÙNG NỔ
                     displayGift(data.gift);
                     confetti();
                 };
@@ -241,7 +240,7 @@
             update();
         }
 
-        document.getElementById('share-button').onclick = () => alert("Hãy chụp màn hình kết quả này để nhận thưởng tại trại 10/5 nhé!");
+        document.getElementById('share-button').onclick = () => alert("Chụp màn hình lại để nhận quà tại 10/5 nhé!");
     </script>
 </body>
 </html>
