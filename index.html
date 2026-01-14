@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bói Quẻ Tương Lai Siêu Dzui 10/5</title>
+    <title>Bói Quẻ Tương Lai Siêu Dzui 10/5 - PRO</title>
     <style>
         /* --- GIỮ NGUYÊN CSS GỐC --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -20,7 +20,7 @@
             font-size: 18px;
             line-height: 1.5;
             position: relative;
-            overflow-x: hidden;
+            overflow: hidden;
         }
         .container {
             width: 100%;
@@ -29,6 +29,7 @@
             border-radius: 20px;
             padding: 30px;
             box-shadow: 0 10px 20px rgba(93, 64, 55, 0.2);
+            z-index: 10;
         }
         h1, h2 { color: #c0392b; margin-bottom: 10px; }
         button {
@@ -57,6 +58,8 @@
         .screen { display: none; opacity: 0; transition: opacity 0.5s ease-in-out; }
         .active { display: block; opacity: 1; }
 
+        /* --- NÂNG CẤP HIỆU ỨNG LẮC QUẺ --- */
+        #jar-wrapper { position: relative; width: 200px; margin: 0 auto; }
         #jar {
             width: 160px; height: 230px;
             background: linear-gradient(#8b4513, #d2691e);
@@ -64,7 +67,19 @@
             border-radius: 20px 20px 50px 50px;
             margin: 20px auto;
             position: relative;
+            z-index: 5;
         }
+        .mantra {
+            position: absolute; color: #c0392b; font-weight: bold; 
+            opacity: 0; white-space: nowrap; pointer-events: none;
+        }
+        .shaking .mantra { animation: fly 1s infinite linear; opacity: 1; }
+        @keyframes fly {
+            0% { transform: translateY(0) scale(0.5); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-100px) scale(1.2); opacity: 0; }
+        }
+
         .shaking { animation: shake-strong 0.1s infinite; }
         @keyframes shake-strong {
             0% { transform: translate(0,0) rotate(0deg); }
@@ -76,26 +91,30 @@
         .sticks-container { display: flex; justify-content: center; align-items: flex-end; height: 150px; margin: 20px 0; }
         .stick {
             width: 20px; height: 120px; background-color: #8b4513; margin: 0 5px;
-            cursor: pointer; border-radius: 5px 5px 0 0;
+            cursor: pointer; border-radius: 5px 5px 0 0; transition: 0.3s;
         }
-        .stick.selected { transform: translateY(-50px); background-color: #c0392b; }
+        .stick:hover { background-color: #c0392b; }
+        .stick.selected { transform: translateY(-50px); background-color: #ffd700; border: 2px solid #c0392b; }
         .stick.disabled { opacity: 0.2; pointer-events: none; }
 
-        /* BẢNG CHECK-IN */
+        /* BẢNG CHECK-IN & Mystery Gift */
         #result-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); display: none; justify-content: center;
+            background: rgba(0,0,0,0.8); display: none; justify-content: center;
             align-items: center; z-index: 2000; padding: 15px;
         }
         #checkin-board {
             background: #fff; border: 3px solid #c0392b; padding: 20px;
-            border-radius: 15px; margin-bottom: 20px; width: 100%;
+            border-radius: 15px; margin-bottom: 15px; width: 100%;
+            position: relative; overflow: hidden;
         }
+        .quote-box { font-size: 12px; font-style: italic; color: #7f8c8d; border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px; }
         .ad-banner {
             background: #c0392b; color: white; padding: 10px;
             border-radius: 8px; font-weight: bold; font-size: 14px;
             margin-top: 15px;
         }
+        #btn-mystery { background: #ff4757; color: white; font-size: 16px; margin-top: 5px; }
         #confetti-canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 2500; }
     </style>
 </head>
@@ -103,43 +122,48 @@
     <div class="container">
         <div id="screen1" class="screen active">
             <h1>🔮 Bói Quẻ 10/5 🔮</h1>
-            <p>Vận mệnh năm 2026 của bạn nằm ở đây!</p>
+            <p>Khám phá bí mật vận mệnh của bạn!</p>
             <button id="confirm1">BẮT ĐẦU</button>
         </div>
 
         <div id="screen2" class="screen">
-            <p>Mỗi người chỉ được gieo quẻ <b>DUY NHẤT 1 LẦN</b>. Bạn đã sẵn sàng?</p>
-            <button id="confirm2">TÔI ĐÃ SẴN SÀNG</button>
+            <p>Bạn có tin vào định mệnh không? Vũ trụ đang chờ đợi bạn...</p>
+            <button id="confirm2">TÔI TIN</button>
         </div>
 
         <div id="screen-birthdate" class="screen">
-            <p>Nhập ngày sinh của bạn:</p>
+            <p>Nhập ngày sinh để gieo quẻ:</p>
             <input type="date" id="birthdate">
             <button id="cast">Gieo Quẻ Ngay</button>
         </div>
 
         <div id="screen-jar" class="screen">
-            <div id="jar"></div>
-            <p>Đang kết nối vũ trụ...</p>
+            <div id="jar-wrapper">
+                <div class="mantra" style="left: -20px;">Úm ma ni...</div>
+                <div class="mantra" style="right: -20px;">Bát di hồng...</div>
+                <div id="jar"></div>
+            </div>
+            <p>Đang thỉnh cầu vũ trụ...</p>
         </div>
 
         <div id="screen-sticks" class="screen">
-            <p>Rút 1 lá quẻ định mệnh:</p>
+            <p>Chọn một "mảnh ghép" tương lai:</p>
             <div class="sticks-container"></div>
         </div>
 
         <div id="result-modal">
             <div style="max-width: 400px; width: 100%;">
                 <div id="checkin-board">
-                    <h2 style="font-size: 18px; border-bottom: 2px solid #eee; padding-bottom: 10px;">📜 LÁ SỐ TƯƠNG LAI 2026 📜</h2>
-                    <div id="result-display" style="padding: 20px 0;"></div>
+                    <h2 style="font-size: 18px; border-bottom: 2px solid #eee; padding-bottom: 10px;">📜 LÁ SỐ ĐỊNH MỆNH 2026 📜</h2>
+                    <div id="result-display" style="padding: 15px 0;"></div>
+                    <div id="quote-display" class="quote-box"></div>
                     <div class="ad-banner">
                         🚩 ĐỊA ĐIỂM: TRẠI LỚP 10/5<br>
-                        🥤 MUA NƯỚC NGAY - VẬN MAY SẼ TỚI!
+                        🥤 THỬ VẬN MAY - NHẬN NGAY QUÀ KHỦNG!
                     </div>
                 </div>
-                <button id="share-button" style="background: #0084ff; color: white;">📢 CHIA SẺ CHECK-IN</button>
-                <p style="color: white; font-size: 13px; margin-top: 10px;">(Bạn đã bói xong, không thể bói lại lần 2)</p>
+                <button id="btn-mystery">🎁 NHẬN LỘC BẤT NGỜ</button>
+                <button id="share-button" style="background: #0084ff; color: white;">📢 CHIA SẺ VẬN MAY</button>
             </div>
         </div>
     </div>
@@ -152,46 +176,49 @@
             click: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
             shake: new Audio('https://orangefreesounds.com/wp-content/uploads/2015/07/Dice-shake-sound-effect.mp3'),
             flip: new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3'),
-            win: new Audio('https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3')
+            win: new Audio('https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3'),
+            gift: new Audio('https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3')
         };
         audios.shake.loop = true;
 
         // --- DỮ LIỆU ---
-        const storageKey = 'user_fortune_10_5_final';
+        const storageKey = 'user_fortune_10_5_ultra';
         const fortunes = [
-            "Số đỏ như son! Tiền vô như nước, crush tự đổ. Ghé 10/5 ăn mừng nhé!",
-            "Vận đào hoa nở rộ! Ra ngõ gặp người yêu, vào trại 10/5 gặp trà sữa ngon.",
-            "Quý nhân phù trợ, học hành thăng tiến. Mua nước 10/5 để khai thông trí tuệ!",
-            "Cần cẩn thận ví tiền, dễ bị hao hụt. Qua 10/5 mua nước giải hạn ngay!",
-            "Tình duyên hơi lận đận, nhưng tiền tài thì ổn. Uống nước 10/5 cho đời bớt đắng.",
-            "Năm nay bình an, sức khỏe dồi dào. Ghé 10/5 chill cùng bạn bè là nhất."
+            "Vận khí cực thịnh! Tiền vô như nước, tình duyên viên mãn. Ghé 10/5 khao bạn bè ngay!",
+            "Tương lai rạng ngời! Sắp có tin vui bất ngờ từ phương xa. Đừng quên ghé 10/5 nhé.",
+            "Quý nhân phù trợ, mọi việc hanh thông. Uống nước 10/5 để lấy thêm năng lượng!",
+            "Cẩn thận hao tài tốn của, nhưng nếu ghé 10/5 giải xui thì mọi chuyện sẽ ổn thôi.",
+            "Tình duyên chớm nở, có người đang thầm thương bạn đấy. Hãy tự tin lên!",
+            "Sức khỏe dồi dào, tinh thần minh mẫn. Một ly trà sữa 10/5 sẽ làm ngày của bạn tuyệt hơn."
         ];
 
-        // --- KIỂM TRA ĐÃ BÓI CHƯA ---
+        const quotes = [
+            "Vũ trụ không bao giờ nhầm lẫn, mọi thứ xảy ra đều có lý do.",
+            "Hôm nay bạn cười, ngày mai may mắn sẽ mỉm cười với bạn.",
+            "Đừng chờ đợi cơ hội, hãy tự tạo ra nó (bằng cách ghé 10/5).",
+            "Năng lượng tích cực sẽ thu hút những điều tốt đẹp.",
+            "Cuộc đời là những chuyến đi, và điểm dừng chân đẹp nhất là 10/5."
+        ];
+
+        const mysteryGifts = [
+            "Tặng bạn 1 lời chúc: 'Cả năm không lo hết tiền'!",
+            "Voucher giảm giá 0% (Đùa thôi, hãy cười lên để nhận may mắn nhé)!",
+            "Bạn nhận được 1 cái ôm tinh thần từ lớp 10/5!",
+            "Lộc hôm nay: Hãy rủ người bên trái bạn đi mua nước tại 10/5!",
+            "Bạn là người tuyệt vời nhất hôm nay! Đó chính là món quà lớn nhất."
+        ];
+
         window.onload = () => {
             const saved = localStorage.getItem(storageKey);
-            if (saved) {
-                showFinalResult(JSON.parse(saved), true);
-            }
+            if (saved) showFinalResult(JSON.parse(saved), true);
         };
 
         function getZodiac(day, month) {
-            if((month == 1 && day <= 19) || (month == 12 && day >=22)) return "Ma Kết";
-            if((month == 1 && day >= 20) || (month == 2 && day <=18)) return "Bảo Bình";
-            if((month == 2 && day >= 19) || (month == 3 && day <=20)) return "Song Ngư";
-            if((month == 3 && day >= 21) || (month == 4 && day <=19)) return "Bạch Dương";
-            if((month == 4 && day >= 20) || (month == 5 && day <=20)) return "Kim Ngưu";
-            if((month == 5 && day >= 21) || (month == 6 && day <=21)) return "Song Tử";
-            if((month == 6 && day >= 22) || (month == 7 && day <=22)) return "Cự Giải";
-            if((month == 7 && day >= 23) || (month == 8 && day <=22)) return "Sư Tử";
-            if((month == 8 && day >= 23) || (month == 9 && day <=22)) return "Xử Nữ";
-            if((month == 9 && day >= 23) || (month == 10 && day <=23)) return "Thiên Bình";
-            if((month == 10 && day >= 24) || (month == 11 && day <=22)) return "Bọ Cạp";
-            if((month == 11 && day >= 23) || (month == 12 && day <=21)) return "Nhân Mã";
-            return "Bí Ẩn";
+            const signs = ["Ma Kết","Bảo Bình","Song Ngư","Bạch Dương","Kim Ngưu","Song Tử","Cự Giải","Sư Tử","Xử Nữ","Thiên Bình","Bọ Cạp","Nhân Mã"];
+            const last_days = [19, 18, 20, 19, 20, 21, 22, 22, 22, 23, 22, 21];
+            return day > last_days[month - 1] ? signs[month % 12] : signs[month - 1];
         }
 
-        // --- ĐIỀU HƯỚNG ---
         function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             setTimeout(() => {
@@ -208,33 +235,35 @@
         document.getElementById('cast').onclick = () => {
             if(!document.getElementById('birthdate').value) return alert("Vui lòng nhập ngày sinh!");
             audios.click.play(); showScreen('screen-jar');
-            document.getElementById('jar').classList.add('shaking');
+            const jarWrapper = document.getElementById('jar-wrapper');
+            jarWrapper.classList.add('shaking');
             audios.shake.play();
 
             setTimeout(() => {
                 audios.shake.pause();
+                jarWrapper.classList.remove('shaking');
                 showScreen('screen-sticks');
                 renderSticks();
-            }, 2500);
+            }, 3000);
         };
 
         function renderSticks() {
             const container = document.querySelector('.sticks-container');
-            for(let i=0; i<5; i++) {
+            container.innerHTML = '';
+            for(let i=0; i<6; i++) {
                 const s = document.createElement('div');
                 s.className = 'stick';
                 s.onclick = () => {
                     audios.flip.play();
                     s.classList.add('selected');
                     document.querySelectorAll('.stick').forEach(el => el.classList.add('disabled'));
-                    
                     const birth = new Date(document.getElementById('birthdate').value);
                     const data = {
                         zodiac: getZodiac(birth.getDate(), birth.getMonth()+1),
                         fortune: fortunes[Math.floor(Math.random()*fortunes.length)],
-                        lucky: Math.floor(Math.random()*99)+1
+                        lucky: Math.floor(Math.random()*99)+1,
+                        quote: quotes[Math.floor(Math.random()*quotes.length)]
                     };
-                    
                     localStorage.setItem(storageKey, JSON.stringify(data));
                     setTimeout(() => showFinalResult(data), 1000);
                 };
@@ -244,23 +273,27 @@
 
         function showFinalResult(data, isOld = false) {
             document.getElementById('result-display').innerHTML = `
-                <p style="color: #e67e22; font-weight: bold; margin-bottom: 10px;">🌟 CUNG: ${data.zodiac.toUpperCase()}</p>
-                <p style="font-size: 18px; margin-bottom: 15px; padding: 0 10px;">"${data.fortune}"</p>
+                <p style="color: #e67e22; font-weight: bold; margin-bottom: 5px;">✨ CUNG: ${data.zodiac.toUpperCase()} ✨</p>
+                <p style="font-size: 18px; line-height: 1.4; padding: 10px;">"${data.fortune}"</p>
                 <p style="font-weight: bold; color: #c0392b;">SỐ MAY MẮN: ${data.lucky}</p>
             `;
+            document.getElementById('quote-display').innerText = data.quote;
             document.getElementById('result-modal').style.display = 'flex';
-            if(!isOld) { audios.win.play(); confetti(); }
+            if(!isOld) audios.win.play();
+            confetti();
         }
 
-        // --- CHIA SẺ ---
+        // TÍNH NĂNG MỚI: Hộp quà bí ẩn
+        document.getElementById('btn-mystery').onclick = () => {
+            audios.gift.play();
+            const gift = mysteryGifts[Math.floor(Math.random() * mysteryGifts.length)];
+            alert("🎁 QUÀ TỪ VŨ TRỤ 10/5: \n\n" + gift);
+        };
+
         document.getElementById('share-button').onclick = () => {
-            const text = "Tui vừa bói quẻ tại trại 10/5 nè! Vận mệnh tui là: " + document.getElementById('result-display').innerText + " 👉 Ghé 10/5 bói thử nha!";
-            if (navigator.share) {
-                navigator.share({ title: 'Bói Quẻ 10/5', text: text, url: window.location.href });
-            } else {
-                navigator.clipboard.writeText(text);
-                alert("Đã copy nội dung! Hãy dán vào Messenger hoặc Nhật ký TikTok nhé.");
-            }
+            const text = "Tui vừa bói quẻ tại trại 10/5! Vận mệnh: " + document.getElementById('result-display').innerText + " 👉 Qua 10/5 bói đi!";
+            if (navigator.share) navigator.share({ title: 'Bói Quẻ 10/5', text: text, url: window.location.href });
+            else { navigator.clipboard.writeText(text); alert("Đã copy nội dung!"); }
         };
 
         function confetti() {
@@ -268,14 +301,20 @@
             const ctx = canvas.getContext('2d');
             canvas.width = window.innerWidth; canvas.height = window.innerHeight;
             const pieces = [];
-            for(let i=0; i<100; i++) pieces.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height-canvas.height, c:`hsl(${Math.random()*360},100%,50%)`, s:Math.random()*3+2});
-            function draw() {
+            for(let i=0; i<100; i++) pieces.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, c:`hsl(${Math.random()*360},100%,50%)`, s:Math.random()*3+2, a:Math.random()*6.28});
+            function update() {
                 ctx.clearRect(0,0,canvas.width,canvas.height);
-                pieces.forEach(p => { p.y+=p.s; ctx.fillStyle=p.c; ctx.fillRect(p.x, p.y, 5, 5); });
-                if(pieces.length > 0 && pieces[0].y < canvas.height) requestAnimationFrame(draw);
+                pieces.forEach(p => {
+                    p.y += p.s; p.a += 0.05;
+                    ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.a);
+                    ctx.fillStyle = p.c; ctx.fillRect(-3,-3,6,6); ctx.restore();
+                    if(p.y > canvas.height) p.y = -10;
+                });
+                requestAnimationFrame(update);
             }
-            draw();
+            update();
         }
     </script>
 </body>
 </html>
+
