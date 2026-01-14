@@ -1,112 +1,325 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>Menu Hội Trại 10/5</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      margin: 0;
-      padding: 20px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bói Quẻ Tương Lai Siêu Dzui 10/5</title>
+    <style>
+        /* --- GIỮ NGUYÊN CSS GỐC CỦA BẠN --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fff5e6; 
+            color: #5d4037; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 20px;
+            font-size: 18px;
+            line-height: 1.5;
+            position: relative;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 100%;
+            width: 100%;
+            background: rgba(255, 245, 230, 0.9);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(93, 64, 55, 0.2);
+        }
+        h1, h2 { color: #c0392b; }
+        button {
+            background: #ffd700; 
+            color: #5d4037;
+            border: none;
+            padding: 15px 30px;
+            font-size: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            margin: 10px 0;
+            will-change: transform, box-shadow;
+            font-weight: bold;
+        }
+        button:hover { transform: scale(1.05); box-shadow: 0 5px 10px rgba(255, 215, 0, 0.5); }
+        input[type="date"] {
+            padding: 10px;
+            font-size: 18px;
+            border: 2px solid #c0392b;
+            border-radius: 10px;
+            margin: 20px 0;
+            transition: border-color 0.3s ease-in-out;
+        }
+        
+        /* Ẩn các màn với transition */
+        .screen { display: none; opacity: 0; transition: opacity 0.5s ease-in-out; }
+        .active { display: block; opacity: 1; }
 
-    h1 {
-      text-align: center;
-      color: #2c7a7b;
-    }
+        /* Ống quẻ */
+        #jar {
+            width: 180px; height: 250px;
+            background: url('jar.png') center/contain no-repeat, linear-gradient(#8b4513, #d2691e);
+            border: 10px solid #5d4037;
+            border-radius: 20px 20px 60px 60px;
+            margin: 30px auto;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+        }
+        .shaking { animation: shake-strong 0.12s infinite cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+        @keyframes shake-strong {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-8px, -12px) rotate(-8deg); }
+            50% { transform: translate(12px, -5px) rotate(10deg); }
+            75% { transform: translate(-10px, 10px) rotate(-7deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
 
-    .menu {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 15px;
-      margin-top: 20px;
-    }
+        /* Que quẻ */
+        .sticks-container { display: flex; justify-content: center; align-items: flex-end; height: 180px; margin: 30px 0; position: relative; }
+        .stick {
+            width: 18px; height: 130px; background-color: #5d4037; margin: 0 8px;
+            cursor: pointer; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border-radius: 5px 5px 0 0; box-shadow: 0 0 10px rgba(93, 64, 55, 0.5);
+        }
+        .stick.selected { transform: translateY(-80px); }
+        .stick.disabled { pointer-events: none; opacity: 0.3; }
 
-    .item {
-      background: white;
-      padding: 15px;
-      border-radius: 10px;
-      text-align: center;
-      cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      transition: transform 0.2s;
-    }
+        /* --- BẢNG CHECK-IN & MODAL --- */
+        #result-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); display: none; justify-content: center;
+            align-items: center; z-index: 2000; padding: 15px;
+        }
+        #result-content {
+            background: #fff5e6; padding: 25px; border-radius: 20px;
+            max-width: 450px; width: 100%; text-align: center; border: 4px solid #c0392b;
+            position: relative;
+        }
+        
+        /* Khung bảng Check-in đẹp hơn để share */
+        #checkin-board {
+            background: white; border: 2px dashed #c0392b; padding: 20px;
+            border-radius: 15px; margin-bottom: 20px;
+            background-image: radial-gradient(#fff5e6 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .ad-banner {
+            background: #c0392b; color: #ffd700; padding: 8px;
+            border-radius: 8px; font-weight: bold; font-size: 14px;
+            margin-top: 15px; animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse { 0% {opacity: 0.8;} 50% {opacity: 1;} 100% {opacity: 0.8;} }
 
-    .item:hover {
-      transform: scale(1.05);
-    }
+        .btn-group { display: flex; flex-direction: column; gap: 10px; }
+        .btn-share { background: #0084ff; color: white; } /* Blue for Messenger/Share */
+        .btn-close { background: #7f8c8d; color: white; font-size: 16px; }
 
-    .info {
-      margin-top: 25px;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      min-height: 120px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-
-    .info h2 {
-      margin-top: 0;
-      color: #c05621;
-    }
-  </style>
+        #credit { position: fixed; bottom: 10px; left: 10px; font-size: 12px; color: #5d4037; opacity: 0.6; }
+        #confetti-canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 2500; }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <div id="screen1" class="screen active">
+            <h1>🔮 Bói Quẻ Tương Lai 🔮<br>Trại Lớp 10/5</h1>
+            <p>Khám phá vận mệnh 2026 của bạn ngay!</p>
+            <button id="confirm1">BẮT ĐẦU</button>
+        </div>
 
-  <h1>🍢 MENU HỘI TRẠI 10/5 🍹</h1>
+        <div id="screen2" class="screen">
+            <p>Bạn hứa sẽ không "quỵt" tiền nước lớp 10/5 sau khi xem bói chứ?</p>
+            <button id="confirm2">TÔI HỨA</button>
+        </div>
 
-  <div class="menu">
-    <div class="item" onclick="showInfo('banhTrang')">🥙 Bánh Tráng Trộn</div>
-    <div class="item" onclick="showInfo('xienQue')">🍢 Xiên Que</div>
-    <div class="item" onclick="showInfo('traTac')">🍹 Trà Tắc</div>
-    <div class="item" onclick="showInfo('traSua')">🧋 Trà Sữa</div>
-    <div class="item" onclick="showInfo('bapRang')">🍿 Bắp Rang</div>
-    <div class="item" onclick="showInfo('banhNgot')">🍰 Bánh Ngọt</div>
-  </div>
+        <div id="screen-birthdate" class="screen">
+            <p>Ngày sinh của bạn là gì?</p>
+            <input type="date" id="birthdate">
+            <button id="cast">Gieo Quẻ</button>
+        </div>
 
-  <div class="info" id="infoBox">
-    <h2>📌 Thông tin món</h2>
-    <p>Bấm vào một món để xem thông tin chi tiết.</p>
-  </div>
+        <div id="screen-jar" class="screen">
+            <div id="jar"></div>
+            <p>Thầy đang lắc quẻ, đợi xíu...</p>
+        </div>
 
-  <script>
-    function showInfo(monan) {
-      const infoBox = document.getElementById("infoBox");
+        <div id="screen-sticks" class="screen">
+            <p>Chọn 1 que quẻ định mệnh:</p>
+            <div class="sticks-container"></div>
+        </div>
 
-      const data = {
-        banhTrang: {
-          name: "Bánh Tráng Trộn",
-          desc: "Bánh tráng trộn với trứng, tắc, sa tế. (Ví dụ)"
-        },
-        xienQue: {
-          name: "Xiên Que",
-          desc: "Các loại xiên nướng hấp dẫn. (Ví dụ)"
-        },
-        traTac: {
-          name: "Trà Tắc",
-          desc: "Trà tắc mát lạnh giải khát. (Ví dụ)"
-        },
-        traSua: {
-          name: "Trà Sữa",
-          desc: "Trà sữa nhiều topping. (Ví dụ)"
-        },
-        bapRang: {
-          name: "Bắp Rang",
-          desc: "Bắp rang bơ thơm ngon. (Ví dụ)"
-        },
-        banhNgot: {
-          name: "Bánh Ngọt",
-          desc: "Bánh ngọt handmade. (Ví dụ)"
+        <div id="result-modal">
+            <div id="result-content">
+                <div id="checkin-board">
+                    <h2 style="font-size: 20px;">📜 KẾT QUẢ GIEO QUẺ 📜</h2>
+                    <div id="result-display"></div>
+                    <div class="ad-banner">
+                        🚩 GHÉ GIAN HÀNG 10/5 - GIẢI HẠN CỰC MẠNH!<br>
+                        🧋 Nước ngon - Bói chuẩn - Quẩy nhiệt!
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button id="share-button" class="btn-share">📢 CHIA SẺ (Mess/TikTok/FB)</button>
+                    <button id="close-modal" class="btn-close">Đóng & Về Trang Chủ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="credit">dev by hai duong | Class 10/5</div>
+    <canvas id="confetti-canvas"></canvas>
+
+    <script>
+        // --- ÂM THANH ---
+        const audios = {
+            click: new Audio('https://orangefreesounds.com/wp-content/uploads/2023/03/Mechanical-button-click-sound-effect.mp3'),
+            shake: new Audio('https://orangefreesounds.com/wp-content/uploads/2015/07/Dice-shake-sound-effect.mp3'),
+            flip: new Audio('https://orangefreesounds.com/wp-content/uploads/2018/07/Card-flip-sound-effect.mp3'),
+            win: new Audio('https://orangefreesounds.com/wp-content/uploads/2020/09/Win-sound-effect.mp3'),
+            sad: new Audio('https://orangefreesounds.com/wp-content/uploads/2021/12/Sad-violin-sound.mp3')
+        };
+        audios.shake.loop = true;
+
+        function play(name) {
+            if(audios[name]) {
+                audios[name].currentTime = 0;
+                audios[name].play().catch(() => {});
+            }
         }
-      };
 
-      infoBox.innerHTML = `
-        <h2>${data[monan].name}</h2>
-        <p>${data[monan].desc}</p>
-      `;
-    }
-  </script>
+        // --- LOGIC BÓI (GIỮ NGUYÊN) ---
+        const fortunes = [
+            {type: 'good', text: 'Số đỏ như son! Năm tới tiền vô như nước sông Đà. Crush tự nhiên inbox rủ đi chơi.'},
+            {type: 'good', text: 'Quý nhân phù trợ! Đi thi khoanh bừa cũng trúng. Nhớ mua nước khao bạn bè nha.'},
+            {type: 'good', text: 'Thần tài gõ cửa! Ăn uống được bao, shopping săn được sale cực đậm.'},
+            {type: 'normal', text: 'Năm nay bình bình, sáng đi học chiều về ngủ, tối lướt TikTok. Chill phết.'},
+            {type: 'normal', text: 'Tiền đủ xài, trà sữa uống lai rai. Ghé 10/5 mua ủng hộ nha.'},
+            {type: 'bad', text: 'Sao "Thái Bạch" chiếu! Tiền dễ bay màu. Mua ngay nước ở quầy 10/5 để giải hạn!'},
+            {type: 'bad', text: 'Tình duyên lận đận. Ghé quầy 10/5 mua nước ngọt cho đời bớt đắng bạn ơi.'},
+            {type: 'bad', text: 'Dễ bị "dí deadline" tới tắt thở. Nạp năng lượng gấp tại quầy 10/5 mới qua khỏi.'}
+        ];
 
+        function getZodiac(day, month) {
+            if((month == 1 && day <= 19) || (month == 12 && day >=22)) return "Ma Kết";
+            if((month == 1 && day >= 20) || (month == 2 && day <=18)) return "Bảo Bình";
+            if((month == 2 && day >= 19) || (month == 3 && day <=20)) return "Song Ngư";
+            if((month == 3 && day >= 21) || (month == 4 && day <=19)) return "Bạch Dương";
+            if((month == 4 && day >= 20) || (month == 5 && day <=20)) return "Kim Ngưu";
+            if((month == 5 && day >= 21) || (month == 6 && day <=21)) return "Song Tử";
+            if((month == 6 && day >= 22) || (month == 7 && day <=22)) return "Cự Giải";
+            if((month == 7 && day >= 23) || (month == 8 && day <=22)) return "Sư Tử";
+            if((month == 8 && day >= 23) || (month == 9 && day <=22)) return "Xử Nữ";
+            if((month == 9 && day >= 23) || (month == 10 && day <=23)) return "Thiên Bình";
+            if((month == 10 && day >= 24) || (month == 11 && day <=22)) return "Bọ Cạp";
+            if((month == 11 && day >= 23) || (month == 12 && day <=21)) return "Nhân Mã";
+            return "Bí Ẩn";
+        }
+
+        // --- XỬ LÝ MÀN HÌNH ---
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => { s.classList.remove('active'); s.style.display = 'none'; });
+            const target = document.getElementById(id);
+            target.style.display = 'block';
+            setTimeout(() => target.classList.add('active'), 50);
+        }
+
+        document.getElementById('confirm1').onclick = () => { play('click'); showScreen('screen2'); };
+        document.getElementById('confirm2').onclick = () => { play('click'); showScreen('screen-birthdate'); };
+
+        document.getElementById('cast').onclick = () => {
+            const birth = document.getElementById('birthdate').value;
+            if(!birth) return alert("Nhập ngày sinh đã bạn ơi!");
+            play('click'); showScreen('screen-jar');
+            document.getElementById('jar').classList.add('shaking');
+            play('shake');
+
+            setTimeout(() => {
+                audios.shake.pause();
+                showScreen('screen-sticks');
+                renderSticks(birth);
+            }, 2500);
+        };
+
+        function renderSticks(birth) {
+            const container = document.querySelector('.sticks-container');
+            container.innerHTML = '';
+            let selected = false;
+            for(let i=0; i<5; i++) {
+                const s = document.createElement('div');
+                s.className = 'stick';
+                s.onclick = () => {
+                    if(selected) return;
+                    selected = true;
+                    play('flip');
+                    s.classList.add('selected');
+                    document.querySelectorAll('.stick:not(.selected)').forEach(el => el.classList.add('disabled'));
+                    setTimeout(() => showFinalResult(birth), 800);
+                };
+                container.appendChild(s);
+            }
+        }
+
+        function showFinalResult(birth) {
+            const date = new Date(birth);
+            const zodiac = getZodiac(date.getDate(), date.getMonth()+1);
+            const luckyNum = Math.floor(Math.random() * 99) + 1;
+            const fortune = fortunes[Math.floor(Math.random()*fortunes.length)];
+
+            const html = `
+                <p style="margin: 10px 0; color: #e67e22; font-weight: bold;">🌟 Cung: ${zodiac}</p>
+                <p style="font-size: 18px; line-height: 1.4; padding: 10px;">"${fortune.text}"</p>
+                <p style="color: #c0392b; font-weight: bold;">Số may mắn: ${luckyNum}</p>
+            `;
+            document.getElementById('result-display').innerHTML = html;
+            
+            const modal = document.getElementById('result-modal');
+            modal.style.display = 'flex';
+            if(fortune.type === 'good') { play('win'); confetti(); } 
+            else if(fortune.type === 'bad') { play('sad'); }
+        }
+
+        // --- TÍNH NĂNG CHIA SẺ MỚI ---
+        document.getElementById('share-button').onclick = () => {
+            const resultText = document.getElementById('checkin-board').innerText;
+            const shareData = {
+                title: 'Bói Quẻ 10/5',
+                text: resultText + "\n👉 Ghé ngay gian hàng 10/5 để giải hạn nhé!",
+                url: window.location.href
+            };
+
+            // Sử dụng Web Share API (hỗ trợ tốt trên Mobile)
+            if (navigator.share) {
+                navigator.share(shareData).catch(() => {
+                    copyToClipboard(shareData.text);
+                });
+            } else {
+                copyToClipboard(shareData.text);
+            }
+        };
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text);
+            alert("Đã copy nội dung check-in! Bạn có thể dán vào Messenger hoặc Nhật ký TikTok rồi đó.");
+        }
+
+        document.getElementById('close-modal').onclick = () => location.reload();
+
+        function confetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const pieces = [];
+            for(let i=0; i<100; i++) pieces.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height-canvas.height, c:`hsl(${Math.random()*360},100%,50%)`, s:Math.random()*3+2});
+            function draw() {
+                ctx.clearRect(0,0,canvas.width,canvas.height);
+                pieces.forEach(p => { p.y+=p.s; ctx.fillStyle=p.c; ctx.fillRect(p.x, p.y, 5, 5); });
+                if(pieces[0].y < canvas.height) requestAnimationFrame(draw);
+            }
+            draw();
+        }
+    </script>
 </body>
 </html>
