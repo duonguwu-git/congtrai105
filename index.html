@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bói Quẻ Tương Lai 10/5 - FULL VERSION</title>
+    <title>Bói Quẻ 10/5 - PHIÊN BẢN GIỚI HẠN</title>
     <style>
-        /* --- GIỮ NGUYÊN CSS GỐC VÀ THÊM MỚI --- */
+        /* --- GIỮ NGUYÊN CSS GỐC --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -30,13 +30,12 @@
         .screen { display: none; opacity: 0; transition: opacity 0.5s ease-in-out; }
         .active { display: block; opacity: 1; }
 
-        /* Hiệu ứng Mantra */
         #jar-wrapper { position: relative; width: 200px; margin: 0 auto; }
         #jar {
             width: 160px; height: 230px; background: linear-gradient(#8b4513, #d2691e);
             border: 8px solid #5d4037; border-radius: 20px 20px 50px 50px; margin: 20px auto;
         }
-        .mantra { position: absolute; color: #c0392b; font-weight: bold; opacity: 0; white-space: nowrap; }
+        .mantra { position: absolute; color: #c0392b; font-weight: bold; opacity: 0; white-space: nowrap; font-style: italic; }
         .shaking .mantra { animation: fly 1s infinite linear; opacity: 1; }
         @keyframes fly { 0% { transform: translateY(0) scale(0.5); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(-100px) scale(1.2); opacity: 0; } }
         .shaking { animation: shake 0.1s infinite; }
@@ -47,14 +46,14 @@
         .stick.selected { transform: translateY(-50px); background: #ffd700; border: 2px solid #c0392b; }
         .stick.disabled { opacity: 0.2; pointer-events: none; }
 
-        /* MODAL KẾT QUẢ */
         #result-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 15px;
         }
         #checkin-board { background: #fff; border: 4px solid #c0392b; padding: 25px; border-radius: 15px; width: 100%; max-width: 380px; position: relative; }
-        #special-timer { display: none; background: #ff4757; color: white; padding: 10px; border-radius: 8px; margin: 10px 0; font-weight: bold; border: 2px dashed #ffd700; }
-        .ad-banner { background: #c0392b; color: white; padding: 10px; border-radius: 8px; margin-top: 15px; font-weight: bold; font-size: 14px; }
+        #special-timer { display: none; background: #ff4757; color: white; padding: 10px; border-radius: 8px; margin: 10px 0; font-weight: bold; border: 2px dashed #ffd700; animation: pulse 1s infinite; }
+        @keyframes pulse { 0% {transform: scale(1);} 50% {transform: scale(1.05);} 100% {transform: scale(1);} }
+        .ad-banner { background: #c0392b; color: white; padding: 10px; border-radius: 8px; margin-top: 15px; font-weight: bold; font-size: 14px; line-height: 1.4; }
         #confetti-canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 2500; }
     </style>
 </head>
@@ -62,17 +61,17 @@
     <div class="container">
         <div id="screen1" class="screen active">
             <h1>🔮 Bói Quẻ 10/5 🔮</h1>
-            <p>Khám phá vận mệnh 2026 của bạn!</p>
+            <p>Khám phá bí mật vận mệnh của bạn!</p>
             <button id="confirm1">BẮT ĐẦU</button>
         </div>
 
         <div id="screen2" class="screen">
-            <p>Bạn đã sẵn sàng để diện kiến tương lai chưa?</p>
+            <p>Bạn đã sẵn sàng diện kiến tương lai chưa?</p>
             <button id="confirm2">TÔI ĐÃ SẴN SÀNG!</button>
         </div>
 
         <div id="screen-birthdate" class="screen">
-            <p>Ngày sinh của bạn là gì?</p>
+            <p>Nhập ngày sinh của bạn:</p>
             <input type="date" id="birthdate">
             <button id="cast">Gieo Quẻ Ngay</button>
         </div>
@@ -83,32 +82,33 @@
                 <div class="mantra" style="right: -30px;">Bát di hồng...</div>
                 <div id="jar"></div>
             </div>
-            <p>Đang thỉnh cầu thần linh...</p>
+            <p>Vũ trụ đang lắng nghe...</p>
         </div>
 
         <div id="screen-sticks" class="screen">
-            <p>Rút 1 lá quẻ định mệnh:</p>
+            <p>Hãy rút một lá quẻ định mệnh:</p>
             <div class="sticks-container"></div>
         </div>
 
         <div id="result-modal">
-            <div>
+            <div style="width: 100%; max-width: 380px;">
                 <div id="checkin-board">
-                    <h2 style="font-size: 18px;">📜 LÁ SỐ TƯƠNG LAI 📜</h2>
-                    <div id="result-display" style="padding: 15px 0;"></div>
+                    <h2 style="font-size: 18px;">📜 LÁ SỐ MAY MẮN 📜</h2>
+                    <div id="result-display" style="padding: 10px 0; font-size: 16px;"></div>
                     
                     <div id="special-timer">
                         ⏳ 15 PHÚT VÀNG: <span id="timer-clock">15:00</span><br>
-                        <small>Đưa màn hình cho quầy 10/5 ngay!</small>
+                        <small>Chụp màn hình đưa quầy 10/5 ngay!</small>
                     </div>
-                    <div id="gift-display" style="font-weight: bold; color: #c0392b; margin: 10px 0; border-top: 1px solid #eee; padding-top: 10px;"></div>
+
+                    <div id="gift-display" style="font-weight: bold; color: #c0392b; margin: 10px 0; border-top: 2px dashed #eee; padding-top: 10px; min-height: 40px;"></div>
 
                     <div class="ad-banner">
-                        🚩 GIAN HÀNG LỚP 10/5<br>
-                        NƯỚC NGON - QUẢ TRÊN CẢ TUYỆT VỜI!
+                        🚩 TRẠI LỚP 10/5<br>
+                        Nước ngon, giải hạn, quẻ chuẩn!
                     </div>
                 </div>
-                <button id="btn-mystery" style="background: #ff4757; color: white;">🎁 NHẬN LỘC MAY MẮN</button>
+                <button id="btn-mystery" style="background: #ff4757; color: white;">🎁 NHẬN LỘC TỪ VŨ TRỤ</button>
                 <button id="share-button" style="background: #0084ff; color: white;">📢 CHIA SẺ CHECK-IN</button>
             </div>
         </div>
@@ -121,25 +121,20 @@
             click: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
             shake: new Audio('https://orangefreesounds.com/wp-content/uploads/2015/07/Dice-shake-sound-effect.mp3'),
             flip: new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3'),
-            win: new Audio('https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3')
+            fortune_reveal: new Audio('https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3'), // Tiếng hiện quẻ
+            win_reward: new Audio('https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3')   // Tiếng nhận quà (vỗ tay/pháo hoa)
         };
         audios.shake.loop = true;
 
-        const storageKey = 'user_fortune_10_5_final_pro';
+        const storageKey = 'user_fortune_10_5_ultra_final_v5';
 
-        // --- TỈ LỆ PHẦN THƯỞNG ĐÚNG YÊU CẦU ---
         function getMysteryGift() {
             const rand = Math.random() * 100;
-            // 50% Không trúng (Chúc bạn may mắn)
-            if (rand < 50) return { text: "Chúc bạn may mắn lần sau! Đừng buồn, uống một ly nước 10/5 là thấy đời đẹp ngay! 🥤", type: 'none' };
-            // 12.5% Giảm 2%
-            if (rand < 62.5) return { text: "Chúc mừng! Bạn nhận được Voucher GIẢM 2%!", type: 'v2' };
-            // 12.5% Giảm 5%
-            if (rand < 75) return { text: "Xịn xò! Voucher GIẢM 5% thuộc về bạn!", type: 'v5' };
-            // 12.5% Miễn phí 1 ly
-            if (rand < 87.5) return { text: "VẬN MAY ĐỈNH CAO: MIỄN PHÍ 1 LY NƯỚC (Khi rủ bạn mua chung)!", type: 'free' };
-            // 12.5% 15 Phút Vàng
-            return { text: "SỰ KIỆN KHỦNG: 15 PHÚT VÀNG GIẢM GIÁ TỔNG!", type: 'timer' };
+            if (rand < 50) return { text: "Chúc bạn may mắn! Thử ngay ly nước ở 10/5, vận may sẽ tới bất ngờ đó! ✨", type: 'none' }; 
+            if (rand < 80) return { text: "Chúc mừng! Bạn nhận được Voucher GIẢM 2%!", type: 'v2' }; 
+            if (rand < 95) return { text: "Tuyệt vời! Bạn nhận được Voucher GIẢM 5%!", type: 'v5' }; 
+            if (rand < 99) return { text: "SỰ KIỆN 15 PHÚT VÀNG: GIẢM GIÁ TỔNG KHI MUA CHUNG!", type: 'timer' }; 
+            return { text: "🔥 SIÊU CẤP MAY MẮN: MIỄN PHÍ 1 LY (Khi rủ bạn mua chung 1 ly bất kì)!", type: 'free' }; 
         }
 
         window.onload = () => {
@@ -181,7 +176,7 @@
                     audios.flip.play(); s.classList.add('selected');
                     document.querySelectorAll('.stick').forEach(el => el.classList.add('disabled'));
                     const data = {
-                        fortune: "Năm 2026 của bạn sẽ tràn đầy niềm vui và sự đột phá!",
+                        fortune: "Vận mệnh năm 2026 của bạn đang thăng hoa rực rỡ!",
                         lucky: Math.floor(Math.random()*99)+1,
                         gift: getMysteryGift()
                     };
@@ -193,9 +188,12 @@
         }
 
         function showFinalResult(data, isOld = false) {
-            document.getElementById('result-display').innerHTML = `<p>${data.fortune}</p><p style="font-weight:bold; color:#c0392b;">Số may mắn: ${data.lucky}</p>`;
+            document.getElementById('result-display').innerHTML = `<p>${data.fortune}</p><p style="font-weight:bold; color:#c0392b; margin-top:5px;">Số may mắn: ${data.lucky}</p>`;
             document.getElementById('result-modal').style.display = 'flex';
             
+            // Âm thanh hiện quẻ bói
+            if(!isOld) audios.fortune_reveal.play();
+
             const btnMystery = document.getElementById('btn-mystery');
             if (isOld) {
                 btnMystery.style.display = 'none';
@@ -203,18 +201,18 @@
             } else {
                 btnMystery.onclick = () => {
                     btnMystery.style.display = 'none';
+                    // Âm thanh nhận thưởng khác hẳn
+                    audios.win_reward.play(); 
                     displayGift(data.gift);
-                    audios.win.play(); confetti();
+                    confetti();
                 };
             }
         }
 
         function displayGift(gift) {
             const giftDisplay = document.getElementById('gift-display');
-            giftDisplay.innerText = "🎁 LỘC TỪ 10/5: " + gift.text;
-            if (gift.type === 'timer') {
-                startTimer(15 * 60);
-            }
+            giftDisplay.innerText = "🎁 LỘC 10/5: " + gift.text;
+            if (gift.type === 'timer') startTimer(15 * 60);
         }
 
         function startTimer(duration) {
@@ -243,7 +241,7 @@
             update();
         }
 
-        document.getElementById('share-button').onclick = () => alert("Hãy chụp màn hình lại và mang tới trại 10/5 ngay nhé!");
+        document.getElementById('share-button').onclick = () => alert("Hãy chụp màn hình kết quả này để nhận thưởng tại trại 10/5 nhé!");
     </script>
 </body>
 </html>
