@@ -3,256 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bói Quẻ 10/5 - PHIÊN BẢN HOÀN HẢO</title>
+    <title>Bói Quẻ 10/5 - Đồng Bộ Âm Thanh</title>
     <style>
-        /* --- GIỮ NGUYÊN CSS XỊN XÒ --- */
+        /* --- CSS GIỮ NGUYÊN PHONG CÁCH XỊN XÒ --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #fff5e6; color: #5d4037; 
             display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; text-align: center; padding: 20px;
-            overflow: hidden; position: relative;
+            min-height: 100vh; text-align: center; padding: 20px; overflow: hidden;
         }
         .container {
-            width: 100%; max-width: 450px; background: rgba(255, 245, 230, 0.9);
-            border-radius: 20px; padding: 30px; box-shadow: 0 10px 20px rgba(93, 64, 55, 0.2); z-index: 10;
+            width: 100%; max-width: 450px; background: rgba(255, 245, 230, 0.95);
+            border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); z-index: 10;
         }
-        h1, h2 { color: #c0392b; margin-bottom: 10px; }
+        h1 { color: #c0392b; font-size: 24px; margin-bottom: 15px; }
         button {
-            background: #ffd700; color: #5d4037; border: none; padding: 15px 30px;
-            font-size: 18px; border-radius: 10px; cursor: pointer;
+            background: #ffd700; color: #5d4037; border: none; padding: 15px;
+            font-size: 18px; border-radius: 12px; cursor: pointer;
             margin: 10px 0; font-weight: bold; width: 100%; transition: 0.3s;
         }
-        button:hover { transform: scale(1.05); }
-        input[type="date"] { padding: 12px; font-size: 18px; border: 2px solid #c0392b; border-radius: 10px; width: 100%; margin: 20px 0; }
+        input[type="date"] { padding: 12px; font-size: 18px; border: 2px solid #c0392b; border-radius: 10px; width: 100%; margin: 15px 0; }
         
-        .screen { display: none; opacity: 0; transition: opacity 0.5s ease-in-out; }
+        .screen { display: none; opacity: 0; transition: 0.5s; }
         .active { display: block; opacity: 1; }
 
-        /* Bình quẻ */
-        #jar-wrapper { position: relative; width: 200px; margin: 0 auto; cursor: pointer; }
+        /* Hiệu ứng Bình Quẻ */
+        #jar-container { position: relative; width: 180px; margin: 20px auto; cursor: pointer; }
         #jar {
-            width: 160px; height: 230px; background: linear-gradient(#8b4513, #d2691e);
-            border: 8px solid #5d4037; border-radius: 20px 20px 50px 50px; margin: 20px auto;
+            width: 150px; height: 220px; background: linear-gradient(#8b4513, #d2691e);
+            border: 6px solid #5d4037; border-radius: 20px 20px 50px 50px; margin: 0 auto;
         }
-        .mantra { position: absolute; color: #c0392b; font-weight: bold; opacity: 0; white-space: nowrap; font-style: italic; }
+        .shaking { animation: shake 0.1s infinite; }
+        @keyframes shake { 0% {transform: rotate(0);} 25% {transform: rotate(-10deg);} 75% {transform: rotate(10deg);} }
+
+        /* Hiệu ứng Úm ba la */
+        .mantra { position: absolute; color: #c0392b; font-weight: bold; opacity: 0; pointer-events: none; }
         .shaking .mantra { animation: fly 1s infinite linear; opacity: 1; }
-        @keyframes fly { 0% { transform: translateY(0) scale(0.5); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(-100px) scale(1.2); opacity: 0; } }
-        .shaking { animation: shake 0.15s infinite; }
-        @keyframes shake { 0%, 100% {transform: rotate(0);} 25% {transform: rotate(-10deg);} 75% {transform: rotate(10deg);} }
+        @keyframes fly { 0% { transform: translateY(0) scale(0.5); opacity: 0; } 100% { transform: translateY(-120px) scale(1.2); opacity: 0; } }
 
         /* Thẻ quẻ */
-        .sticks-container { display: flex; justify-content: center; align-items: flex-end; height: 150px; margin: 20px 0; }
-        .stick { width: 20px; height: 120px; background: #8b4513; margin: 0 5px; border-radius: 5px 5px 0 0; cursor: pointer; transition: 0.3s; }
-        .stick.selected { transform: translateY(-70px) rotate(5deg); background: #ffd700; border: 2px solid #c0392b; }
-        .stick.disabled { opacity: 0.2; pointer-events: none; }
+        .sticks-container { display: flex; justify-content: center; align-items: flex-end; height: 160px; margin: 20px 0; }
+        .stick { width: 25px; height: 130px; background: #8b4513; margin: 0 6px; border-radius: 8px 8px 0 0; cursor: pointer; transition: 0.4s; position: relative; }
+        .stick:hover { background: #a0522d; }
+        .stick.selected { transform: translateY(-80px); background: #ffd700; border: 2px solid #c0392b; }
+        .stick.disabled { opacity: 0.3; pointer-events: none; }
 
+        /* Modal kết quả */
         #result-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 15px;
+            background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 99; padding: 20px;
         }
-        #checkin-board { background: #fff; border: 4px solid #c0392b; padding: 25px; border-radius: 15px; width: 100%; max-width: 380px; }
-        #special-timer { display: none; background: #ff4757; color: white; padding: 10px; border-radius: 8px; margin: 10px 0; font-weight: bold; border: 2px dashed #ffd700; }
-        .ad-banner { background: #c0392b; color: white; padding: 10px; border-radius: 8px; margin-top: 15px; font-weight: bold; font-size: 14px; }
-        #confetti-canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 2500; }
+        #checkin-board { background: white; border: 5px solid #c0392b; border-radius: 20px; padding: 25px; width: 100%; max-width: 380px; }
+        #special-timer { display: none; background: #ff4757; color: white; padding: 10px; border-radius: 8px; margin: 15px 0; font-weight: bold; }
     </style>
 </head>
 <body>
+
     <div class="container">
         <div id="screen1" class="screen active">
-            <h1>🔮 Bói Quẻ 10/5 🔮</h1>
-            <p>Khám phá bí mật vận mệnh của bạn!</p>
-            <button id="start-btn">BẮT ĐẦU</button>
+            <h1>🔮 XIN QUẺ ĐẦU NĂM 🔮</h1>
+            <p>Hôm nay bạn muốn xem điều gì?</p>
+            <button onclick="nextStep('screen2')">BẮT ĐẦU</button>
         </div>
 
         <div id="screen2" class="screen">
-            <p>Bạn đã sẵn sàng diện kiến tương lai chưa?</p>
-            <button id="ready-btn">TÔI ĐÃ SẴN SÀNG!</button>
-        </div>
-
-        <div id="screen-birthdate" class="screen">
-            <p>Nhập ngày sinh của bạn:</p>
+            <p>Vui lòng chọn ngày sinh để Vũ Trụ kết nối:</p>
             <input type="date" id="birthdate">
-            <button id="cast-btn">Gieo Quẻ Ngay</button>
+            <button onclick="startCasting()">XÁC NHẬN</button>
         </div>
 
         <div id="screen-jar" class="screen">
-            <div id="jar-wrapper">
-                <div class="mantra" style="left: -30px;">Úm ma ni...</div>
-                <div class="mantra" style="right: -30px;">Bát di hồng...</div>
+            <div id="jar-container" onclick="handleShake()">
+                <div class="mantra" style="left: 10px;">Úm ma ni...</div>
+                <div class="mantra" style="right: 10px;">Bát di hồng...</div>
                 <div id="jar"></div>
             </div>
-            <p>👉 CHẠM VÀO BÌNH ĐỂ XÓC QUẺ 👈</p>
+            <p><b>CHẠM VÀO BÌNH ĐỂ XÓC QUẺ</b></p>
         </div>
 
         <div id="screen-sticks" class="screen">
-            <p>Rút 1 lá quẻ định mệnh:</p>
-            <div class="sticks-container"></div>
-        </div>
-
-        <div id="result-modal">
-            <div style="width: 100%; max-width: 380px;">
-                <div id="checkin-board">
-                    <h2>📜 LÁ SỐ MAY MẮN</h2>
-                    <div id="result-display" style="padding: 15px 0; font-size: 18px;"></div>
-                    <div id="special-timer">⏳ 15 PHÚT VÀNG: <span id="timer-clock">15:00</span></div>
-                    <div id="gift-display" style="font-weight: bold; color: #c0392b; margin: 10px 0; border-top: 2px dashed #eee; padding-top: 10px;"></div>
-                    <div class="ad-banner">🚩 GIAN HÀNG LỚP 10/5<br>Nước ngon giải hạn, quẻ cực chuẩn!</div>
-                </div>
-                <button id="reward-btn" style="background: #ff4757; color: white;">🎁 NHẬN LỘC TỪ VŨ TRỤ</button>
-                <button id="share-btn" style="background: #0084ff; color: white;">📢 CHIA SẺ CHECK-IN</button>
-            </div>
+            <p>Chạm vào 1 thẻ để rút quẻ:</p>
+            <div class="sticks-container" id="sticks"></div>
         </div>
     </div>
 
-    <canvas id="confetti-canvas"></canvas>
+    <div id="result-modal">
+        <div id="checkin-board">
+            <h2 style="color: #c0392b">📜 THÁNH QUẺ CHỈ DẪN</h2>
+            <div id="fortune-text" style="margin: 20px 0; line-height: 1.6;"></div>
+            
+            <div id="special-timer">⏳ HẠN DÙNG: <span id="timer">15:00</span></div>
+            
+            <div id="gift-area" style="background: #fff5e6; padding: 15px; border-radius: 10px; border: 2px dashed #c0392b; font-weight: bold;">
+                Bấm nút dưới để nhận quà...
+            </div>
+            
+            <button id="gift-btn" onclick="revealGift()" style="background: #c0392b; color: white; margin-top: 20px;">🎁 NHẬN LỘC MAY MẮN</button>
+            <p style="font-size: 12px; margin-top: 10px; color: #777;">Chụp màn hình đưa cho nhân viên 10/5 nhé!</p>
+        </div>
+    </div>
 
     <script>
-        // --- HỆ THỐNG ÂM THANH MP3 CHẤT LƯỢNG CAO ---
-        const sounds = {
+        // --- CẤU HÌNH ÂM THANH ---
+        const sfx = {
             click: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
-            shake: new Audio('https://assets.mixkit.co/active_storage/sfx/1074/1074-preview.mp3'), // Tiếng lạch cạch gỗ
-            swipe: new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3'), // Tiếng xoẹt giấy/tre
-            reveal: new Audio('https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3'), // Tiếng Ting ting
-            win: new Audio('https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3')     // Tiếng pháo hoa/vỗ tay
+            shake: new Audio('https://assets.mixkit.co/active_storage/sfx/1074/1074-preview.mp3'),
+            swipe: new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3'),
+            win: new Audio('https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3')
         };
 
-        // Kỹ thuật "Mồi": Khi người dùng bấm nút đầu tiên, trình duyệt cho phép phát toàn bộ âm thanh
-        function warmUpSounds() {
-            Object.values(sounds).forEach(s => {
-                s.play().then(() => { s.pause(); s.currentTime = 0; }).catch(e => {});
-            });
-        }
+        let isAlreadyPlayed = false;
 
-        const storageKey = 'user_fortune_10_5_ultra_final_v10';
-
-        function showScreen(id) {
+        function nextStep(id) {
+            sfx.click.play();
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             setTimeout(() => {
                 document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
-                const t = document.getElementById(id);
-                t.style.display = 'block';
-                setTimeout(() => t.classList.add('active'), 50);
-            }, 500);
+                document.getElementById(id).style.display = 'block';
+                setTimeout(() => document.getElementById(id).classList.add('active'), 50);
+            }, 400);
         }
 
-        // ĐIỀU HƯỚNG
-        document.getElementById('start-btn').onclick = () => {
-            warmUpSounds(); // Kích hoạt toàn bộ âm thanh
-            sounds.click.play();
-            showScreen('screen2');
-        };
+        function startCasting() {
+            if(!document.getElementById('birthdate').value) return alert("Vui lòng chọn ngày sinh!");
+            nextStep('screen-jar');
+        }
 
-        document.getElementById('ready-btn').onclick = () => {
-            sounds.click.play();
-            showScreen('screen-birthdate');
-        };
+        // --- XỬ LÝ XÓC QUẺ (ĐỒNG BỘ ÂM THANH) ---
+        function handleShake() {
+            const jar = document.getElementById('jar-container');
+            if(jar.classList.contains('shaking')) return;
 
-        document.getElementById('cast-btn').onclick = () => {
-            if(!document.getElementById('birthdate').value) return alert("Bạn chưa nhập ngày sinh!");
-            sounds.click.play();
-            showScreen('screen-jar');
-        };
+            // PHÁT ÂM THANH NGAY KHI BẤM
+            sfx.shake.currentTime = 0;
+            sfx.shake.loop = true;
+            sfx.shake.play();
+            
+            jar.classList.add('shaking');
 
-        // LẮC BÌNH (Tiếng lạch cạch)
-        document.getElementById('jar-wrapper').onclick = function() {
-            if(this.classList.contains('shaking')) return;
-            this.classList.add('shaking');
-            sounds.shake.loop = true;
-            sounds.shake.play();
-
+            // Sau 2.5 giây dừng lại
             setTimeout(() => {
-                sounds.shake.pause();
-                sounds.shake.currentTime = 0;
-                this.classList.remove('shaking');
-                showScreen('screen-sticks');
+                sfx.shake.pause();
+                jar.classList.remove('shaking');
+                nextStep('screen-sticks');
                 renderSticks();
-            }, 3000);
-        };
+            }, 2500);
+        }
 
         function renderSticks() {
-            const container = document.querySelector('.sticks-container');
+            const container = document.getElementById('sticks');
             container.innerHTML = '';
             for(let i=0; i<5; i++) {
-                const s = document.createElement('div'); s.className = 'stick';
-                s.onclick = () => {
-                    sounds.swipe.play(); // TIẾNG XOẸT KHI RÚT THẺ
-                    s.classList.add('selected');
-                    document.querySelectorAll('.stick').forEach(el => el.classList.add('disabled'));
-                    const data = {
-                        fortune: "Vận thế năm 2026 của bạn đang cực kỳ rực rỡ!",
-                        gift: getGift()
-                    };
-                    localStorage.setItem(storageKey, JSON.stringify(data));
-                    setTimeout(() => showResult(data), 1000);
+                const s = document.createElement('div');
+                s.className = 'stick';
+                s.onclick = function() {
+                    // ÂM THANH XOẸT KHI RÚT
+                    sfx.swipe.play();
+                    this.classList.add('selected');
+                    document.querySelectorAll('.stick').forEach(el => { if(el!==this) el.classList.add('disabled')});
+                    
+                    setTimeout(showFinalResult, 800);
                 };
                 container.appendChild(s);
             }
         }
 
-        function getGift() {
-            const r = Math.random() * 100;
-            if (r < 50) return { text: "Chúc bạn may mắn! Thử uống một ly nước 10/5 để lấy hên nhé! ✨", type: 'none' };
-            if (r < 80) return { text: "GIẢM 2% TOÀN MENU!", type: 'v2' };
-            if (r < 95) return { text: "GIẢM 5% TOÀN MENU!", type: 'v5' };
-            if (r < 99) return { text: "SỰ KIỆN 15 PHÚT VÀNG!", type: 'timer' };
-            return { text: "MIỄN PHÍ 1 LY (Khi rủ bạn mua chung 1 ly)!", type: 'free' };
-        }
+        // --- QUÀ MARKETING ---
+        const gifts = [
+            "LỘC ĐẠI CÁT: MIỄN PHÍ 1 LY (Khi mua kèm 1 ly bất kỳ)",
+            "LỘC TIẾN BẢO: GIẢM NGAY 5.000đ vào hóa đơn",
+            "LỘC THANH XUÂN: TẶNG 1 TOPPING TRÂN CHÂU/THẠCH",
+            "LỘC HỈ: VOUCHER GIẢM 10% CHO LẦN MUA SAU",
+            "LỘC BÌNH AN: TẶNG 1 PHẦN QUÀ NHỎ TẠI QUẦY"
+        ];
 
-        function showResult(data, isOld = false) {
-            document.getElementById('result-display').innerHTML = `<p>${data.fortune}</p>`;
+        function showFinalResult() {
+            const fortunes = [
+                "Vận thế đang lên, công việc thuận lợi, tình duyên phơi phới!",
+                "Quý nhân phù trợ, khó khăn sớm qua, tài lộc đang gõ cửa.",
+                "Sức khỏe dồi dào, niềm vui bất ngờ từ những người bạn mới.",
+                "Cẩn thận chi tiêu, tích lũy hôm nay, giàu sang mai sau."
+            ];
+            
+            document.getElementById('fortune-text').innerText = fortunes[Math.floor(Math.random()*fortunes.length)];
             document.getElementById('result-modal').style.display = 'flex';
-            if(!isOld) sounds.reveal.play();
-
-            const rewardBtn = document.getElementById('reward-btn');
-            if(isOld) {
-                rewardBtn.style.display = 'none';
-                displayGift(data.gift);
-            } else {
-                rewardBtn.onclick = () => {
-                    rewardBtn.style.display = 'none';
-                    sounds.win.play(); // TIẾNG NHẬN THƯỞNG
-                    displayGift(data.gift);
-                    confetti();
-                };
-            }
         }
 
-        function displayGift(gift) {
-            document.getElementById('gift-display').innerText = "🎁 QUÀ TẶNG: " + gift.text;
-            if(gift.type === 'timer') startTimer();
+        function revealGift() {
+            sfx.win.play();
+            const giftArea = document.getElementById('gift-area');
+            const randomGift = gifts[Math.floor(Math.random()*gifts.length)];
+            giftArea.innerHTML = "🎁 " + randomGift;
+            giftArea.style.color = "#c0392b";
+            document.getElementById('gift-btn').style.display = 'none';
+            
+            // Chạy đồng hồ đếm ngược 15 phút
+            startTimer();
         }
 
         function startTimer() {
             document.getElementById('special-timer').style.display = 'block';
-            let t = 900, clock = document.getElementById('timer-clock');
-            const intr = setInterval(() => {
-                let m = parseInt(t / 60), s = parseInt(t % 60);
-                clock.textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
-                if(--t < 0) { clearInterval(intr); clock.textContent = "HẾT GIỜ!"; }
+            let time = 900;
+            const timerEl = document.getElementById('timer');
+            const countdown = setInterval(() => {
+                let m = Math.floor(time / 60);
+                let s = time % 60;
+                timerEl.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+                if (time-- <= 0) clearInterval(countdown);
             }, 1000);
         }
-
-        function confetti() {
-            const canvas = document.getElementById('confetti-canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-            const pieces = [];
-            for(let i=0; i<80; i++) pieces.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, c:`hsl(${Math.random()*360},100%,50%)`, s:Math.random()*3+2});
-            function update() {
-                ctx.clearRect(0,0,canvas.width,canvas.height);
-                pieces.forEach(p => { p.y += p.s; ctx.fillStyle = p.c; ctx.fillRect(p.x, p.y, 6, 6); if(p.y > canvas.height) p.y = -10; });
-                requestAnimationFrame(update);
-            }
-            update();
-        }
-
-        window.onload = () => {
-            const saved = localStorage.getItem(storageKey);
-            if (saved) showResult(JSON.parse(saved), true);
-        };
-        document.getElementById('share-btn').onclick = () => alert("Chụp màn hình lại nhé!");
     </script>
 </body>
 </html>
