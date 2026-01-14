@@ -3,208 +3,265 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bói Quẻ 10/5 - Bản Ổn Định Nhất</title>
+    <title>Bói Quẻ 10/5 - SIÊU TRẢI NGHIỆM</title>
     <style>
+        /* --- GIỮ NGUYÊN CSS GỐC XỊN XÒ --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #fff5e6; color: #5d4037; 
             display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; text-align: center; padding: 20px; overflow: hidden;
+            min-height: 100vh; text-align: center; padding: 20px;
+            overflow: hidden; position: relative;
         }
         .container {
-            width: 100%; max-width: 420px; background: rgba(255, 245, 230, 0.98);
-            border-radius: 20px; padding: 25px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); z-index: 10;
+            width: 100%; max-width: 450px; background: rgba(255, 245, 230, 0.9);
+            border-radius: 20px; padding: 30px; box-shadow: 0 10px 20px rgba(93, 64, 55, 0.2); z-index: 10;
         }
-        h1 { color: #c0392b; font-size: 22px; margin-bottom: 10px; }
+        h1, h2 { color: #c0392b; margin-bottom: 10px; }
         button {
-            background: #ffd700; color: #5d4037; border: none; padding: 15px;
-            font-size: 17px; border-radius: 12px; cursor: pointer;
-            margin: 8px 0; font-weight: bold; width: 100%; transition: 0.2s;
+            background: #ffd700; color: #5d4037; border: none; padding: 15px 30px;
+            font-size: 18px; border-radius: 10px; cursor: pointer;
+            margin: 10px 0; font-weight: bold; width: 100%; transition: 0.3s;
         }
-        input[type="date"] { padding: 12px; font-size: 18px; border: 2px solid #c0392b; border-radius: 10px; width: 100%; margin: 15px 0; }
+        button:hover { transform: scale(1.05); }
+        input[type="date"] { padding: 12px; font-size: 18px; border: 2px solid #c0392b; border-radius: 10px; width: 100%; margin: 20px 0; }
         
-        .screen { display: none; opacity: 0; transition: 0.4s; }
+        .screen { display: none; opacity: 0; transition: opacity 0.5s ease-in-out; }
         .active { display: block; opacity: 1; }
 
-        /* Bình Quẻ & Mantra */
-        #jar-wrapper { position: relative; width: 160px; margin: 15px auto; cursor: pointer; }
+        /* Hiệu ứng Úm ba la */
+        #jar-wrapper { position: relative; width: 200px; margin: 0 auto; cursor: pointer; }
         #jar {
-            width: 140px; height: 200px; background: linear-gradient(#8b4513, #d2691e);
-            border: 6px solid #5d4037; border-radius: 15px 15px 45px 45px; margin: 0 auto;
+            width: 160px; height: 230px; background: linear-gradient(#8b4513, #d2691e);
+            border: 8px solid #5d4037; border-radius: 20px 20px 50px 50px; margin: 20px auto;
         }
-        .shaking { animation: shake 0.1s infinite; }
-        @keyframes shake { 0% {transform: rotate(0);} 25% {transform: rotate(-10deg);} 75% {transform: rotate(10deg);} }
-        
-        .mantra { position: absolute; color: #c0392b; font-weight: bold; opacity: 0; pointer-events: none; }
+        .mantra { position: absolute; color: #c0392b; font-weight: bold; opacity: 0; white-space: nowrap; font-style: italic; }
         .shaking .mantra { animation: fly 1s infinite linear; opacity: 1; }
-        @keyframes fly { 0% { transform: translateY(0) scale(0.5); opacity: 0; } 100% { transform: translateY(-100px) scale(1.2); opacity: 0; } }
+        @keyframes fly { 0% { transform: translateY(0) scale(0.5); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(-100px) scale(1.2); opacity: 0; } }
+        .shaking { animation: shake 0.15s infinite; }
+        @keyframes shake { 0%, 100% {transform: rotate(0);} 25% {transform: rotate(-10deg);} 75% {transform: rotate(10deg);} }
 
-        /* Thẻ quẻ */
-        .sticks-container { display: flex; justify-content: center; align-items: flex-end; height: 140px; margin: 15px 0; }
-        .stick { width: 22px; height: 110px; background: #8b4513; margin: 0 5px; border-radius: 6px 6px 0 0; cursor: pointer; transition: 0.3s; }
-        .stick.selected { transform: translateY(-60px); background: #ffd700; border: 2px solid #c0392b; }
-        .stick.disabled { opacity: 0.3; pointer-events: none; }
+        .sticks-container { display: flex; justify-content: center; align-items: flex-end; height: 150px; margin: 20px 0; }
+        .stick { width: 20px; height: 120px; background: #8b4513; margin: 0 5px; border-radius: 5px 5px 0 0; cursor: pointer; transition: 0.3s; }
+        .stick.selected { transform: translateY(-70px) rotate(5deg); background: #ffd700; border: 2px solid #c0392b; }
+        .stick.disabled { opacity: 0.2; pointer-events: none; }
 
-        /* Modal */
         #result-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.92); display: none; justify-content: center; align-items: center; z-index: 99; padding: 20px;
+            background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 15px;
         }
-        #checkin-board { background: white; border: 4px solid #c0392b; border-radius: 15px; padding: 20px; width: 100%; max-width: 350px; }
-        #timer-box { background: #ff4757; color: white; padding: 8px; border-radius: 5px; margin: 10px 0; font-size: 14px; font-weight: bold; display: none; }
+        #checkin-board { background: #fff; border: 4px solid #c0392b; padding: 25px; border-radius: 15px; width: 100%; max-width: 380px; position: relative; }
+        #special-timer { display: none; background: #ff4757; color: white; padding: 10px; border-radius: 8px; margin: 10px 0; font-weight: bold; border: 2px dashed #ffd700; }
+        .ad-banner { background: #c0392b; color: white; padding: 10px; border-radius: 8px; margin-top: 15px; font-weight: bold; font-size: 14px; }
+        #confetti-canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 2500; }
     </style>
 </head>
 <body>
-
     <div class="container">
         <div id="screen1" class="screen active">
-            <h1>🔮 XIN QUẺ LỚP 10/5 🔮</h1>
-            <p>Hôm nay bạn muốn xem điều gì?</p>
-            <button onclick="nav('screen2')">BẮT ĐẦU</button>
+            <h1>🔮 Bói Quẻ 10/5 🔮</h1>
+            <p>Khám phá bí mật vận mệnh của bạn!</p>
+            <button id="confirm1">BẮT ĐẦU</button>
         </div>
 
         <div id="screen2" class="screen">
-            <p>Vui lòng nhập ngày sinh:</p>
-            <input type="date" id="bday">
-            <button onclick="checkBday()">TIẾP TỤC</button>
+            <p>Bạn đã sẵn sàng diện kiến tương lai chưa?</p>
+            <button id="confirm2">TÔI ĐÃ SẴN SÀNG!</button>
+        </div>
+
+        <div id="screen-birthdate" class="screen">
+            <p>Nhập ngày sinh của bạn:</p>
+            <input type="date" id="birthdate">
+            <button id="cast">Gieo Quẻ Ngay</button>
         </div>
 
         <div id="screen-jar" class="screen">
-            <div id="jar-wrapper" onclick="handleShake()">
-                <div class="mantra" style="left: 0;">Úm ma ni...</div>
-                <div class="mantra" style="right: 0;">Bát di hồng...</div>
+            <div id="jar-wrapper" title="Bấm vào để lắc">
+                <div class="mantra" style="left: -30px;">Úm ma ni...</div>
+                <div class="mantra" style="right: -30px;">Bát di hồng...</div>
                 <div id="jar"></div>
             </div>
-            <p>🔥 <b>BẤM VÀO BÌNH ĐỂ LẮC</b> 🔥</p>
+            <p>Bấm vào bình để xóc quẻ lạch cạch!</p>
         </div>
 
         <div id="screen-sticks" class="screen">
-            <p>Chọn 1 quẻ để rút:</p>
-            <div class="sticks-container" id="sticks-box"></div>
+            <p>Rút 1 quẻ - Nghe tiếng "Xoẹt" định mệnh:</p>
+            <div class="sticks-container"></div>
+        </div>
+
+        <div id="result-modal">
+            <div style="width: 100%; max-width: 380px;">
+                <div id="checkin-board">
+                    <h2 style="font-size: 18px;">📜 LÁ SỐ MAY MẮN 📜</h2>
+                    <div id="result-display" style="padding: 10px 0; font-size: 16px;"></div>
+                    <div id="special-timer">
+                        ⏳ 15 PHÚT VÀNG: <span id="timer-clock">15:00</span><br>
+                        <small>Chụp màn hình đưa quầy 10/5 ngay!</small>
+                    </div>
+                    <div id="gift-display" style="font-weight: bold; color: #c0392b; margin: 10px 0; border-top: 2px dashed #eee; padding-top: 10px;"></div>
+                    <div class="ad-banner">🚩 TRẠI LỚP 10/5<br>Nước ngon, giải hạn, quẻ cực chuẩn!</div>
+                </div>
+                <button id="btn-mystery" style="background: #ff4757; color: white;">🎁 NHẬN LỘC TỪ VŨ TRỤ</button>
+                <button id="share-button" style="background: #0084ff; color: white;">📢 CHIA SẺ CHECK-IN</button>
+            </div>
         </div>
     </div>
 
-    <div id="result-modal">
-        <div id="checkin-board">
-            <h2 style="color: #c0392b">📜 THÁNH QUẺ CHỈ DẪN</h2>
-            <div id="fortune-msg" style="margin: 15px 0; color: #5d4037;"></div>
-            <div id="timer-box">⏳ LỘC CÓ HẠN: <span id="clock">15:00</span></div>
-            <div id="gift-box" style="background: #fff5e6; padding: 12px; border-radius: 8px; border: 2px dashed #c0392b; font-weight: bold; color: #c0392b;">
-                Đang chờ nhận lộc...
-            </div>
-            <button id="gift-btn" onclick="revealGift()" style="background: #c0392b; color: white; margin-top: 15px;">🎁 NHẬN LỘC</button>
-        </div>
-    </div>
+    <canvas id="confetti-canvas"></canvas>
 
     <script>
-        // --- ÂM THANH "ẢO" ỔN ĐỊNH NHẤT ---
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        let ctx;
+        // --- ÂM THANH ---
+        const audios = {
+            click: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
+            shake: new Audio('https://assets.mixkit.co/active_storage/sfx/1074/1074-preview.mp3'), // Tiếng gỗ lạch cạch
+            swipe: new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3'), // Tiếng xoẹt
+            reveal: new Audio('https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3'), 
+            gift: new Audio('https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3')   
+        };
 
-        function playSound(type) {
-            if (!ctx) ctx = new AudioCtx();
-            if (ctx.state === 'suspended') ctx.resume();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.connect(gain); gain.connect(ctx.destination);
+        const storageKey = 'user_fortune_10_5_final_pro_sound';
 
-            if (type === 'click') {
-                osc.frequency.setValueAtTime(400, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
-                osc.start(); osc.stop(ctx.currentTime + 0.1);
-            } else if (type === 'shake') {
-                osc.type = 'square'; osc.frequency.setValueAtTime(120, ctx.currentTime);
-                gain.gain.setValueAtTime(0.05, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
-                osc.start(); osc.stop(ctx.currentTime + 0.08);
-            } else if (type === 'swipe') {
-                osc.type = 'triangle'; osc.frequency.setValueAtTime(800, ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.2);
-                gain.gain.setValueAtTime(0.1, ctx.currentTime);
-                osc.start(); osc.stop(ctx.currentTime + 0.2);
-            } else if (type === 'win') {
-                osc.type = 'sine'; osc.frequency.setValueAtTime(500, ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(1000, ctx.currentTime + 0.4);
-                gain.gain.setValueAtTime(0.1, ctx.currentTime);
-                osc.start(); osc.stop(ctx.currentTime + 0.4);
-            }
+        // Mở khóa âm thanh khi tương tác đầu tiên
+        function unlockAudio() {
+            Object.values(audios).forEach(a => {
+                a.play().then(() => { a.pause(); a.currentTime = 0; }).catch(() => {});
+            });
         }
 
-        function nav(id) {
-            playSound('click');
+        function getMysteryGift() {
+            const rand = Math.random() * 100;
+            if (rand < 50) return { text: "Chúc bạn may mắn! Thử ngay ly nước ở 10/5, vận may sẽ tới bất ngờ đó! ✨", type: 'none' }; 
+            if (rand < 80) return { text: "Chúc mừng! Bạn nhận được Voucher GIẢM 2%!", type: 'v2' }; 
+            if (rand < 95) return { text: "Tuyệt vời! Bạn nhận được Voucher GIẢM 5%!", type: 'v5' }; 
+            if (rand < 99) return { text: "SỰ KIỆN 15 PHÚT VÀNG: GIẢM GIÁ TỔNG KHI MUA CHUNG!", type: 'timer' }; 
+            return { text: "🔥 SIÊU CẤP MAY MẮN: MIỄN PHÍ 1 LY (Khi rủ bạn mua chung 1 ly bất kì)!", type: 'free' }; 
+        }
+
+        window.onload = () => {
+            const saved = localStorage.getItem(storageKey);
+            if (saved) showFinalResult(JSON.parse(saved), true);
+        };
+
+        function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             setTimeout(() => {
                 document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
-                document.getElementById(id).style.display = 'block';
-                setTimeout(() => document.getElementById(id).classList.add('active'), 50);
-            }, 300);
+                const t = document.getElementById(id);
+                t.style.display = 'block';
+                setTimeout(() => t.classList.add('active'), 50);
+            }, 500);
         }
 
-        function checkBday() {
-            if(!document.getElementById('bday').value) return alert("Nhập ngày sinh nhé!");
-            nav('screen-jar');
-        }
+        document.getElementById('confirm1').onclick = () => { 
+            unlockAudio(); 
+            audios.click.play(); 
+            showScreen('screen2'); 
+        };
 
-        let shakeInt;
-        function handleShake() {
-            const jar = document.getElementById('jar-wrapper');
-            if(jar.classList.contains('shaking')) return;
-            jar.classList.add('shaking');
-            shakeInt = setInterval(() => playSound('shake'), 120);
-            setTimeout(() => {
-                clearInterval(shakeInt);
-                jar.classList.remove('shaking');
-                nav('screen-sticks');
-                renderSticks();
-            }, 2500);
-        }
+        document.getElementById('confirm2').onclick = () => { 
+            audios.click.play(); 
+            showScreen('screen-birthdate'); 
+        };
+
+        document.getElementById('cast').onclick = () => {
+            if(!document.getElementById('birthdate').value) return alert("Nhập ngày sinh đã bạn ơi!");
+            audios.click.play(); 
+            showScreen('screen-jar');
+            
+            // LOGIC LẮC: Bấm vào mới kêu
+            const jarWrapper = document.getElementById('jar-wrapper');
+            jarWrapper.onclick = () => {
+                if(jarWrapper.classList.contains('shaking')) return;
+                
+                jarWrapper.classList.add('shaking');
+                audios.shake.loop = true;
+                audios.shake.play();
+                
+                setTimeout(() => {
+                    audios.shake.pause();
+                    audios.shake.currentTime = 0;
+                    jarWrapper.classList.remove('shaking');
+                    showScreen('screen-sticks');
+                    renderSticks();
+                }, 3000);
+            };
+        };
 
         function renderSticks() {
-            const box = document.getElementById('sticks-box');
-            box.innerHTML = '';
+            const container = document.querySelector('.sticks-container');
+            container.innerHTML = '';
             for(let i=0; i<5; i++) {
-                const s = document.createElement('div');
-                s.className = 'stick';
-                s.onclick = function() {
-                    playSound('swipe');
-                    this.classList.add('selected');
-                    document.querySelectorAll('.stick').forEach(el => { if(el!==this) el.classList.add('disabled')});
-                    setTimeout(showResult, 800);
+                const s = document.createElement('div'); s.className = 'stick';
+                s.onclick = () => {
+                    audios.swipe.play(); // PHÁT TIẾNG XOẸT KHI BẤM VÔ QUẺ
+                    s.classList.add('selected');
+                    document.querySelectorAll('.stick').forEach(el => el.classList.add('disabled'));
+                    const data = {
+                        fortune: "Vận mệnh năm 2026 của bạn đang rạng rỡ như ánh mặt trời!",
+                        lucky: Math.floor(Math.random()*99)+1,
+                        gift: getMysteryGift()
+                    };
+                    localStorage.setItem(storageKey, JSON.stringify(data));
+                    setTimeout(() => showFinalResult(data), 1000);
                 };
-                box.appendChild(s);
+                container.appendChild(s);
             }
         }
 
-        function showResult() {
-            const fots = ["Tài lộc rạng rỡ, gặp dữ hóa lành.", "Quý nhân phù trợ, ghé 10/5 là hên.", "Vạn sự như ý, công việc hanh thông."];
-            document.getElementById('fortune-msg').innerText = fots[Math.floor(Math.random()*fots.length)];
+        function showFinalResult(data, isOld = false) {
+            document.getElementById('result-display').innerHTML = `<p>${data.fortune}</p><p style="font-weight:bold; color:#c0392b; margin-top:5px;">Số may mắn: ${data.lucky}</p>`;
             document.getElementById('result-modal').style.display = 'flex';
+            if(!isOld) audios.reveal.play();
+
+            const btnMystery = document.getElementById('btn-mystery');
+            if (isOld) {
+                btnMystery.style.display = 'none';
+                displayGift(data.gift);
+            } else {
+                btnMystery.onclick = () => {
+                    btnMystery.style.display = 'none';
+                    audios.gift.play(); 
+                    displayGift(data.gift);
+                    confetti();
+                };
+            }
         }
 
-        function revealGift() {
-            playSound('win');
-            const gifts = [
-                "LỘC KẾT ĐOÀN: Nhóm 5 bạn mua chung -> Giảm ngay 10.000đ!",
-                "LỘC TRI KỶ: Mua 3 ly -> Tặng thêm Topping cho cả 3 ly!",
-                "LỘC MAY MẮN: Giảm ngay 2.000đ khi mua từ 2 ly!",
-                "LỘC ĐẠI CÁT: Tặng 1 sticker/phần quà nhỏ khi mua nước!"
-            ];
-            document.getElementById('gift-box').innerText = "🎁 " + gifts[Math.floor(Math.random()*gifts.length)];
-            document.getElementById('gift-btn').style.display = 'none';
-            document.getElementById('timer-box').style.display = 'block';
-            startTimer();
+        function displayGift(gift) {
+            const giftDisplay = document.getElementById('gift-display');
+            giftDisplay.innerText = "🎁 LỘC 10/5: " + gift.text;
+            if (gift.type === 'timer') startTimer(15 * 60);
         }
 
-        function startTimer() {
-            let t = 900;
-            const clock = document.getElementById('clock');
-            const cd = setInterval(() => {
-                let m = Math.floor(t / 60), s = t % 60;
-                clock.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
-                if (t-- <= 0) clearInterval(cd);
+        function startTimer(duration) {
+            const clock = document.getElementById('timer-clock');
+            document.getElementById('special-timer').style.display = 'block';
+            let timer = duration;
+            const interval = setInterval(() => {
+                let mins = parseInt(timer / 60, 10);
+                let secs = parseInt(timer % 60, 10);
+                clock.textContent = (mins < 10 ? "0" + mins : mins) + ":" + (secs < 10 ? "0" + secs : secs);
+                if (--timer < 0) { clearInterval(interval); clock.textContent = "HẾT GIỜ!"; }
             }, 1000);
         }
+
+        function confetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            const pieces = [];
+            for(let i=0; i<100; i++) pieces.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, c:`hsl(${Math.random()*360},100%,50%)`, s:Math.random()*3+2});
+            function update() {
+                ctx.clearRect(0,0,canvas.width,canvas.height);
+                pieces.forEach(p => { p.y += p.s; ctx.fillStyle = p.c; ctx.fillRect(p.x, p.y, 6, 6); if(p.y > canvas.height) p.y = -10; });
+                requestAnimationFrame(update);
+            }
+            update();
+        }
+
+        document.getElementById('share-button').onclick = () => alert("Chụp màn hình lại nhé!");
     </script>
 </body>
 </html>
+
